@@ -1,14 +1,11 @@
-// BuyerHomeScreen.js
-
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
-import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
-import { useRouter } from 'expo-router';
+import { CommonHeader } from '@/components/CommonHeader';
+import { commonStyles } from '@/assets/css/common_styles';
+import { useRouter } from 'expo-router'; // <--- The router is already imported
 import { useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function BuyerHomeScreen() {
-  // ... (Keep existing data definitions)
   const router = useRouter();
   const [scrollY] = useState(new Animated.Value(0));
   
@@ -35,18 +32,24 @@ export default function BuyerHomeScreen() {
     { id: 5, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
     { id: 6, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
   ];
-  // ... (End of existing data definitions)
-
-  const HEADER_HEIGHT = 120; // Adjusted to match the visual height of the header + top padding
   
-  // The Animated.View for the header itself now uses its own height (HEADER_HEIGHT)
+  // --- NAVIGATION FUNCTION ---
+  const handleProductPress = (productId) => {
+    // Assuming your ProductDetailScreen file path is `app/buyer/ProductDetailScreen.js`
+    // In expo-router, this translates to the route `/buyer/ProductDetailScreen`
+    // We pass the product ID as a URL parameter (e.g., /buyer/product/1)
+    router.push(`/ProductDetailScreen?id=${productId}`);
+  };
+  // ---------------------------
+
+  const HEADER_HEIGHT = 120; 
+  
   const headerTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
     extrapolate: 'clamp',
   });
 
-  // The Search Bar needs to scroll off-screen after the header
   const stickySearchBarTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
@@ -55,9 +58,6 @@ export default function BuyerHomeScreen() {
 
   return (
     <View style={commonStyles.container}>
-      {/* 1. Replace the old header View with the CommonHeader component.
-        2. Apply the necessary styles and animation for the *collapsible* effect.
-      */}
       <Animated.View style={[styles.collapsibleHeaderContainer, { transform: [{ translateY: headerTranslateY }] }]}>
         <CommonHeader
           type="buyer"
@@ -67,9 +67,6 @@ export default function BuyerHomeScreen() {
         />
       </Animated.View>
 
-      {/* The sticky search bar remains separate to control its specific animation 
-        and placement relative to the fixed header.
-      */}
       <Animated.View style={[styles.stickySearchBar, { transform: [{ translateY: stickySearchBarTranslateY }] }]}>
         <View style={styles.searchContainer}>
           <IconSymbol name="magnifyingglass" size={20} color="#999" />
@@ -90,62 +87,70 @@ export default function BuyerHomeScreen() {
           { useNativeDriver: true }
         )}
       >
+        <View style={styles.content}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productsScroll}>
+            {products.map((product) => (
+              // --- WRAPPED IN TOUCHABLEOPACITY FOR NAVIGATION ---
+              <TouchableOpacity 
+                key={product.id} 
+                style={styles.productCard}
+                onPress={() => handleProductPress(product.id)} // <-- Added Navigation
+                activeOpacity={0.8}
+              >
+                <View style={styles.productImage}>
+                  <Text style={styles.productEmoji}>{product.image}</Text>
+                  <TouchableOpacity style={styles.favoriteBtn}>
+                    <IconSymbol name="heart" size={20} color="#666" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.productName}>{product.name}</Text>
+                <Text style={styles.productPrice}>{product.price}</Text>
+              </TouchableOpacity>
+              // --- END OF TOUCHABLEOPACITY ---
+            ))}
+          </ScrollView>
 
-      <View style={styles.content}>
-        {/* ... (Rest of the screen content - Products, Categories, Properties) ... */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productsScroll}>
-          {products.map((product) => (
-            <View key={product.id} style={styles.productCard}>
-              <View style={styles.productImage}>
-                <Text style={styles.productEmoji}>{product.image}</Text>
-                <TouchableOpacity style={styles.favoriteBtn}>
-                  <IconSymbol name="heart" size={20} color="#666" />
-                </TouchableOpacity>
+          {/* ... (Categories and Properties sections remain the same) ... */}
+          <View style={styles.categoriesHeader}>
+            <Text style={styles.sectionTitle}>Categories</Text>
+            <IconSymbol name="line.horizontal.3" size={24} color="#34C488" />
+          </View>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
+            {categories.map((category) => (
+              <TouchableOpacity key={category.id} style={styles.categoryItem}>
+                <View style={styles.categoryIcon}>
+                  <IconSymbol name={category.icon as any} size={28} color="#fff" />
+                </View>
+                <Text style={styles.categoryName}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <View style={styles.propertiesGrid}>
+            {properties.map((property) => (
+              <View key={property.id} style={styles.propertyCard}>
+                <View style={styles.propertyImage}>
+                  <Text style={styles.propertyImagePlaceholder}>🏠</Text>
+                  <TouchableOpacity style={styles.propertyFavoriteBtn}>
+                    <IconSymbol name="heart.fill" size={20} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.propertyInfo}>
+                  <Text style={styles.propertyName}>{property.name}</Text>
+                  <Text style={styles.propertyDetails}>{property.details}</Text>
+                  <Text style={styles.propertyPrice}>{property.price}</Text>
+                </View>
               </View>
-              <Text style={styles.productName}>{product.name}</Text>
-              <Text style={styles.productPrice}>{product.price}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        <View style={styles.categoriesHeader}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <IconSymbol name="line.horizontal.3" size={24} color="#34C488" />
+            ))}
+          </View>
         </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-          {categories.map((category) => (
-            <TouchableOpacity key={category.id} style={styles.categoryItem}>
-              <View style={styles.categoryIcon}>
-                <IconSymbol name={category.icon as any} size={28} color="#fff" />
-              </View>
-              <Text style={styles.categoryName}>{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={styles.propertiesGrid}>
-          {properties.map((property) => (
-            <View key={property.id} style={styles.propertyCard}>
-              <View style={styles.propertyImage}>
-                <Text style={styles.propertyImagePlaceholder}>🏠</Text>
-                <TouchableOpacity style={styles.propertyFavoriteBtn}>
-                  <IconSymbol name="heart.fill" size={20} color="#fff" />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.propertyInfo}>
-                <Text style={styles.propertyName}>{property.name}</Text>
-                <Text style={styles.propertyDetails}>{property.details}</Text>
-                <Text style={styles.propertyPrice}>{property.price}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      </View>
       </Animated.ScrollView>
     </View>
   );
 }
+
+// ... (Styles object remains the same) ...
 
 const styles = StyleSheet.create({
   // Use commonStyles.container from css/common.styles.js
@@ -156,21 +161,16 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    // The CommonHeader component handles the background color from common.styles.js
-    paddingBottom: 20, // To match original padding, ensuring full background color coverage
+    paddingBottom: 20, 
     zIndex: 1000,
   },
   
   stickySearchBar: {
     position: 'absolute',
-    // 50 (Header top) + 20 (Header padding bottom) + 20 (Header bottom padding) + 15 (space) 
-    // The original height was around 120 (paddingTop: 50 + paddingBottom: 20) + search bar height 
-    // The previous top was 125, let's keep the structure that works with the animation: 
-    // Place it below the fixed header's visual space.
     top: 125, 
     left: 0,
     right: 0,
-    backgroundColor: '#34C488', // Needs to keep background for smooth animation
+    backgroundColor: '#34C488', 
     paddingHorizontal: 20,
     paddingTop: 5,
     paddingBottom: 20,
@@ -179,11 +179,9 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   scrollContent: {
-    // This padding must account for the fixed header (approx 125) AND the sticky search bar (approx 85)
-    paddingTop: 210, // 125 (header) + 85 (search bar) = 210
+    paddingTop: 210, 
     flexGrow: 1,
   },
-  // Keep search bar styles locally
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -198,14 +196,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  // Keep content styles locally
   content: {
     padding: 20,
   },
   productsScroll: {
     marginBottom: 20,
   },
-  productCard: {
+  productCard: { // This is now the TouchableOpacity
     width: 140,
     marginRight: 15,
     backgroundColor: '#fff',
@@ -332,4 +329,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#34C488',
   },
-});
+})
