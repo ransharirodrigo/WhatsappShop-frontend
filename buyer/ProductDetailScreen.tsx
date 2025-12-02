@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // <-- Import useEffect
+import React, { useState, useEffect } from 'react'; 
 import { 
   View, 
   Text, 
@@ -8,9 +8,8 @@ import {
   StatusBar 
 } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons'; 
-import { useLocalSearchParams } from 'expo-router'; // <--- NEW: Import useLocalSearchParams
+import { useLocalSearchParams } from 'expo-router'; 
 
-// Mock Data Structure (we will use the ID to pretend to fetch data)
 const MOCK_PRODUCTS = {
   '1': { 
     name: 'Electric Bicycle', price: '250,000', currency: 'LKR', stock: 15,
@@ -26,14 +25,12 @@ const MOCK_PRODUCTS = {
   },
 };
 
-// Common thumbnail data for all products (for demonstration)
 const COMMON_THUMBNAILS = [
     { id: 1, src: 'placeholder_thumb_1' },
     { id: 2, src: 'placeholder_thumb_2' },
     { id: 3, src: 'placeholder_thumb_3' },
 ];
 
-// Default data in case no ID is found
 const DEFAULT_PRODUCT_DATA = { 
     name: 'Product Loading...', price: '0', currency: 'LKR', stock: 0,
     description: 'Fetching product details...',
@@ -46,7 +43,6 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
   const productId = id ? String(id) : null;
 
-  // FIX 2: Initialize state based on the ID or default data
   const initialData = MOCK_PRODUCTS[productId] 
     ? { ...MOCK_PRODUCTS[productId], mainImage: 'placeholder_main', thumbnails: COMMON_THUMBNAILS }
     : DEFAULT_PRODUCT_DATA;
@@ -55,7 +51,6 @@ export default function ProductDetailScreen() {
   const [unitCount, setUnitCount] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // FIX 3: Use useEffect to "fetch" the product data when the ID is available/changes
   useEffect(() => {
     if (productId && MOCK_PRODUCTS[productId]) {
         setProductData({
@@ -69,24 +64,18 @@ export default function ProductDetailScreen() {
     }
   }, [productId]);
   
-  // ... (rest of the component logic) ...
   
   const increaseUnit = () => setUnitCount(prev => (prev < productData.stock ? prev + 1 : prev));
   const decreaseUnit = () => setUnitCount(prev => (prev > 1 ? prev - 1 : prev));
 
-  // Placeholder functions for navigation/actions
   const goBack = () => console.log('Go Back Pressed');
   const shareProduct = () => console.log('Share Product');
   const chatWithSeller = () => console.log('Chat with Seller');
 
-  // --- Mock Image Component ---
- // Inside ProductDetailScreen.tsx
 
 const MockImage = ({ type, style }) => (
   <View style={[styles.mockImageBase, type === 'main' ? styles.mainImage : styles.thumbImage, style]}>
-    {/* 🎯 FIX: Provide a non-empty string inside the Text component */}
     <Text style={styles.mockImageText}>
-      {/* Use a placeholder string */}
       {productData.name} Image Placeholder
     </Text> 
   </View>
@@ -95,13 +84,11 @@ const MockImage = ({ type, style }) => (
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ... (rest of the JSX is the same) ... */}
-        {/* Main Product Image Area */}
+     
         <View style={styles.imageGallery}>
           <MockImage type="main" />
         </View>
 
-        {/* Floating Header/Navigation */}
         <View style={styles.floatingHeader}>
           <TouchableOpacity onPress={goBack} style={styles.iconButton}>
             <Ionicons name="arrow-back" size={24} color="#000" />
@@ -113,7 +100,6 @@ const MockImage = ({ type, style }) => (
           </View>
         </View>
         
-        {/* Thumbnails */}
         <View style={styles.thumbnailRow}>
           {productData.thumbnails.map((thumb) => (
             <MockImage key={thumb.id} type="thumb" style={styles.thumbnailContainer} />
@@ -123,14 +109,12 @@ const MockImage = ({ type, style }) => (
           </View>
         </View>
 
-        {/* Product Info Section */}
         <View style={styles.content}>
           <View style={styles.priceRow}>
             <View style={styles.titlePrice}>
-              <Text style={styles.productTitle}>{productData.name} (ID: {productId || 'N/A'})</Text> {/* Debug display */}
+              <Text style={styles.productTitle}>{productData.name} (ID: {productId || 'N/A'})</Text> 
               <Text style={styles.productPrice}>{productData.currency} {productData.price}</Text>
             </View>
-            {/* ... (rest of the priceRow and actions) ... */}
             <View style={styles.rightActions}>
               <TouchableOpacity onPress={shareProduct} style={styles.shareIcon}>
                 <FontAwesome name="share-square-o" size={24} color="#333" />
@@ -183,13 +167,11 @@ const MockImage = ({ type, style }) => (
   );
 }
 
-// ... (Styles object remains the same) ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  // ... (rest of the styles are unchanged) ...
   imageGallery: {
     width: '100%',
     height: 380, 
