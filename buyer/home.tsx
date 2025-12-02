@@ -1,9 +1,14 @@
+// BuyerHomeScreen.js
+
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
+import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Animated, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function BuyerHomeScreen() {
+  // ... (Keep existing data definitions)
   const router = useRouter();
   const [scrollY] = useState(new Animated.Value(0));
   
@@ -25,40 +30,47 @@ export default function BuyerHomeScreen() {
   const properties = [
     { id: 1, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
     { id: 2, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
+    { id: 3, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
+    { id: 4, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
+    { id: 5, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
+    { id: 6, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
   ];
+  // ... (End of existing data definitions)
 
-  const HEADER_HEIGHT = 120;
+  const HEADER_HEIGHT = 120; // Adjusted to match the visual height of the header + top padding
   
+  // The Animated.View for the header itself now uses its own height (HEADER_HEIGHT)
   const headerTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
     extrapolate: 'clamp',
   });
 
-  const searchBarTranslateY = scrollY.interpolate({
+  // The Search Bar needs to scroll off-screen after the header
+  const stickySearchBarTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
     extrapolate: 'clamp',
   });
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.header, { transform: [{ translateY: headerTranslateY }] }]}>
-        <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.userName}>Randika Perera</Text>
-            <Text style={styles.greeting}>Good Morning!</Text>
-          </View>
-          <TouchableOpacity style={styles.avatar} onPress={() => router.push('/buyer-profile')}>
-            <Image
-              source={require('@/assets/images/dp.jpg')}
-              style={styles.avatarImage}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={commonStyles.container}>
+      {/* 1. Replace the old header View with the CommonHeader component.
+        2. Apply the necessary styles and animation for the *collapsible* effect.
+      */}
+      <Animated.View style={[styles.collapsibleHeaderContainer, { transform: [{ translateY: headerTranslateY }] }]}>
+        <CommonHeader
+          type="buyer"
+          userName="Randika Perera"
+          greeting="Good Morning!"
+          profileRoute="/buyer-profile"
+        />
       </Animated.View>
 
-      <Animated.View style={[styles.stickySearchBar, { transform: [{ translateY: searchBarTranslateY }] }]}>
+      {/* The sticky search bar remains separate to control its specific animation 
+        and placement relative to the fixed header.
+      */}
+      <Animated.View style={[styles.stickySearchBar, { transform: [{ translateY: stickySearchBarTranslateY }] }]}>
         <View style={styles.searchContainer}>
           <IconSymbol name="magnifyingglass" size={20} color="#999" />
           <TextInput
@@ -80,6 +92,7 @@ export default function BuyerHomeScreen() {
       >
 
       <View style={styles.content}>
+        {/* ... (Rest of the screen content - Products, Categories, Properties) ... */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productsScroll}>
           {products.map((product) => (
             <View key={product.id} style={styles.productCard}>
@@ -135,32 +148,29 @@ export default function BuyerHomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
+  // Use commonStyles.container from css/common.styles.js
+
+  // New container for the CommonHeader to apply absolute positioning and animation
+  collapsibleHeaderContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#34C488',
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    // The CommonHeader component handles the background color from common.styles.js
+    paddingBottom: 20, // To match original padding, ensuring full background color coverage
     zIndex: 1000,
   },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  
   stickySearchBar: {
     position: 'absolute',
-    top: 125,
+    // 50 (Header top) + 20 (Header padding bottom) + 20 (Header bottom padding) + 15 (space) 
+    // The original height was around 120 (paddingTop: 50 + paddingBottom: 20) + search bar height 
+    // The previous top was 125, let's keep the structure that works with the animation: 
+    // Place it below the fixed header's visual space.
+    top: 125, 
     left: 0,
     right: 0,
-    backgroundColor: '#34C488',
+    backgroundColor: '#34C488', // Needs to keep background for smooth animation
     paddingHorizontal: 20,
     paddingTop: 5,
     paddingBottom: 20,
@@ -169,38 +179,11 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   scrollContent: {
-    paddingTop: 210,
+    // This padding must account for the fixed header (approx 125) AND the sticky search bar (approx 85)
+    paddingTop: 210, // 125 (header) + 85 (search bar) = 210
     flexGrow: 1,
   },
-  userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  greeting: {
-    fontSize: 16,
-    color: '#e0f2e0',
-    marginTop: 4,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#8B7FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: '#fff',
-    borderStyle: 'dashed',
-  },
-  avatarImage: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-  },
-  avatarText: {
-    fontSize: 30,
-  },
+  // Keep search bar styles locally
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -215,6 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  // Keep content styles locally
   content: {
     padding: 20,
   },
