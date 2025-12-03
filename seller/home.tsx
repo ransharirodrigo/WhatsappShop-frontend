@@ -1,8 +1,7 @@
 // SellerHomeScreen.js
 
-import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
 import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function SellerHomeScreen() {
   // ... (Keep existing data definitions)
@@ -28,16 +27,13 @@ export default function SellerHomeScreen() {
 
   return (
     <ScrollView style={commonStyles.container} showsVerticalScrollIndicator={false}>
-      {/* 1. Replace the old header View with the CommonHeader component.
-        2. Seller's header is non-collapsible, so it's placed directly in the ScrollView.
-      */}
-      <CommonHeader
-        type="seller"
-        userName="Randika Perera"
-        greeting="Good Morning!"
-        // Add a placeholder route or leave empty if the seller profile route is not defined yet
-        profileRoute="/seller-profile" 
-      />
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.userName}>Randika Perera</Text>
+          <Text style={styles.greeting}>Good Morning!</Text>
+        </View>
+        <Image source={require('@/assets/images/dp.jpg')} style={styles.avatar} />
+      </View>
 
       <View style={styles.content}>
         {/* ... (Rest of the screen content) ... */}
@@ -112,9 +108,30 @@ export default function SellerHomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  // Only keep styles unique to SellerHomeScreen, referencing commonStyles for the rest.
-  // The header-specific styles and container style are now in common.styles.js
-
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 32,
+    marginBottom: 16,
+  },
+  userName: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  greeting: {
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 2,
+    borderColor: '#D1FAE5',
+  },
   content: {
     padding: 20,
   },
