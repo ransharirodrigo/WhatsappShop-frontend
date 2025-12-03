@@ -1,7 +1,9 @@
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useRouter } from 'expo-router';
+import { CommonHeader } from '@/components/CommonHeader';
+import { commonStyles } from '@/assets/css/common_styles';
+import { useRouter } from 'expo-router'; // <--- The router is already imported
 import { useState } from 'react';
-import { Animated, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function BuyerHomeScreen() {
   const router = useRouter();
@@ -25,9 +27,22 @@ export default function BuyerHomeScreen() {
   const properties = [
     { id: 1, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
     { id: 2, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
+    { id: 3, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
+    { id: 4, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
+    { id: 5, name: 'Heaven Garden', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 80,000 night' },
+    { id: 6, name: 'Iceland 3 stone', details: '1-2 rate • 1 Bathroom • 1 King Bed • 2 guest', price: 'LKR 500,000 night' },
   ];
+  
+  // --- NAVIGATION FUNCTION ---
+  const handleProductPress = (productId) => {
+    // Assuming your ProductDetailScreen file path is `app/buyer/ProductDetailScreen.js`
+    // In expo-router, this translates to the route `/buyer/ProductDetailScreen`
+    // We pass the product ID as a URL parameter (e.g., /buyer/product/1)
+    router.push(`/ProductDetailScreen?id=${productId}`);
+  };
+  // ---------------------------
 
-  const HEADER_HEIGHT = 120;
+  const HEADER_HEIGHT = 120; 
   
   const headerTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
@@ -35,30 +50,24 @@ export default function BuyerHomeScreen() {
     extrapolate: 'clamp',
   });
 
-  const searchBarTranslateY = scrollY.interpolate({
+  const stickySearchBarTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
     extrapolate: 'clamp',
   });
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.header, { transform: [{ translateY: headerTranslateY }] }]}>
-        <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.userName}>Randika Perera</Text>
-            <Text style={styles.greeting}>Good Morning!</Text>
-          </View>
-          <TouchableOpacity style={styles.avatar} onPress={() => router.push('/buyer-profile')}>
-            <Image
-              source={require('@/assets/images/dp.jpg')}
-              style={styles.avatarImage}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={commonStyles.container}>
+      <Animated.View style={[styles.collapsibleHeaderContainer, { transform: [{ translateY: headerTranslateY }] }]}>
+        <CommonHeader
+          type="buyer"
+          userName="Randika Perera"
+          greeting="Good Morning!"
+          profileRoute="/buyer-profile"
+        />
       </Animated.View>
 
-      <Animated.View style={[styles.stickySearchBar, { transform: [{ translateY: searchBarTranslateY }] }]}>
+      <Animated.View style={[styles.stickySearchBar, { transform: [{ translateY: stickySearchBarTranslateY }] }]}>
         <View style={styles.searchContainer}>
           <IconSymbol name="magnifyingglass" size={20} color="#999" />
           <TextInput
@@ -78,89 +87,90 @@ export default function BuyerHomeScreen() {
           { useNativeDriver: true }
         )}
       >
+        <View style={styles.content}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productsScroll}>
+            {products.map((product) => (
+              // --- WRAPPED IN TOUCHABLEOPACITY FOR NAVIGATION ---
+              <TouchableOpacity 
+                key={product.id} 
+                style={styles.productCard}
+                onPress={() => handleProductPress(product.id)} // <-- Added Navigation
+                activeOpacity={0.8}
+              >
+                <View style={styles.productImage}>
+                  <Text style={styles.productEmoji}>{product.image}</Text>
+                  <TouchableOpacity style={styles.favoriteBtn}>
+                    <IconSymbol name="heart" size={20} color="#666" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.productName}>{product.name}</Text>
+                <Text style={styles.productPrice}>{product.price}</Text>
+              </TouchableOpacity>
+              // --- END OF TOUCHABLEOPACITY ---
+            ))}
+          </ScrollView>
 
-      <View style={styles.content}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productsScroll}>
-          {products.map((product) => (
-            <View key={product.id} style={styles.productCard}>
-              <View style={styles.productImage}>
-                <Text style={styles.productEmoji}>{product.image}</Text>
-                <TouchableOpacity style={styles.favoriteBtn}>
-                  <IconSymbol name="heart" size={20} color="#666" />
-                </TouchableOpacity>
+          {/* ... (Categories and Properties sections remain the same) ... */}
+          <View style={styles.categoriesHeader}>
+            <Text style={styles.sectionTitle}>Categories</Text>
+            <IconSymbol name="line.horizontal.3" size={24} color="#34C488" />
+          </View>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
+            {categories.map((category) => (
+              <TouchableOpacity key={category.id} style={styles.categoryItem}>
+                <View style={styles.categoryIcon}>
+                  <IconSymbol name={category.icon as any} size={28} color="#fff" />
+                </View>
+                <Text style={styles.categoryName}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <View style={styles.propertiesGrid}>
+            {properties.map((property) => (
+              <View key={property.id} style={styles.propertyCard}>
+                <View style={styles.propertyImage}>
+                  <Text style={styles.propertyImagePlaceholder}>🏠</Text>
+                  <TouchableOpacity style={styles.propertyFavoriteBtn}>
+                    <IconSymbol name="heart.fill" size={20} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.propertyInfo}>
+                  <Text style={styles.propertyName}>{property.name}</Text>
+                  <Text style={styles.propertyDetails}>{property.details}</Text>
+                  <Text style={styles.propertyPrice}>{property.price}</Text>
+                </View>
               </View>
-              <Text style={styles.productName}>{product.name}</Text>
-              <Text style={styles.productPrice}>{product.price}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        <View style={styles.categoriesHeader}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <IconSymbol name="line.horizontal.3" size={24} color="#34C488" />
+            ))}
+          </View>
         </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-          {categories.map((category) => (
-            <TouchableOpacity key={category.id} style={styles.categoryItem}>
-              <View style={styles.categoryIcon}>
-                <IconSymbol name={category.icon as any} size={28} color="#fff" />
-              </View>
-              <Text style={styles.categoryName}>{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={styles.propertiesGrid}>
-          {properties.map((property) => (
-            <View key={property.id} style={styles.propertyCard}>
-              <View style={styles.propertyImage}>
-                <Text style={styles.propertyImagePlaceholder}>🏠</Text>
-                <TouchableOpacity style={styles.propertyFavoriteBtn}>
-                  <IconSymbol name="heart.fill" size={20} color="#fff" />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.propertyInfo}>
-                <Text style={styles.propertyName}>{property.name}</Text>
-                <Text style={styles.propertyDetails}>{property.details}</Text>
-                <Text style={styles.propertyPrice}>{property.price}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      </View>
       </Animated.ScrollView>
     </View>
   );
 }
 
+// ... (Styles object remains the same) ...
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
+  // Use commonStyles.container from css/common.styles.js
+
+  // New container for the CommonHeader to apply absolute positioning and animation
+  collapsibleHeaderContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#34C488',
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 20, 
     zIndex: 1000,
   },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  
   stickySearchBar: {
     position: 'absolute',
-    top: 125,
+    top: 125, 
     left: 0,
     right: 0,
-    backgroundColor: '#34C488',
+    backgroundColor: '#34C488', 
     paddingHorizontal: 20,
     paddingTop: 5,
     paddingBottom: 20,
@@ -169,37 +179,8 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   scrollContent: {
-    paddingTop: 210,
+    paddingTop: 210, 
     flexGrow: 1,
-  },
-  userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  greeting: {
-    fontSize: 16,
-    color: '#e0f2e0',
-    marginTop: 4,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#8B7FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: '#fff',
-    borderStyle: 'dashed',
-  },
-  avatarImage: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-  },
-  avatarText: {
-    fontSize: 30,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -221,7 +202,7 @@ const styles = StyleSheet.create({
   productsScroll: {
     marginBottom: 20,
   },
-  productCard: {
+  productCard: { // This is now the TouchableOpacity
     width: 140,
     marginRight: 15,
     backgroundColor: '#fff',
@@ -348,4 +329,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#34C488',
   },
-});
+})

@@ -1,6 +1,11 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// SellerHomeScreen.js
+
+import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
+import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function SellerHomeScreen() {
+  // ... (Keep existing data definitions)
   const stats = [
     { id: 1, icon: '🛒', label: 'Active\nProducts', value: '24', color: '#34C488' },
     { id: 2, icon: '📦', label: 'New\nOrders', value: '8', color: '#34C488' },
@@ -19,23 +24,23 @@ export default function SellerHomeScreen() {
     { id: 2, name: 'Cotton T-Shirt', price: '1200', stock: '32', image: '👕' },
     { id: 3, name: 'Cotton T-Shirt', price: '1200', stock: '32', image: '👕' },
   ];
+  // ... (End of existing data definitions)
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.userName}>Randika Perera</Text>
-          <Text style={styles.greeting}>Good Morning!</Text>
-        </View>
-        <View style={styles.avatar}>
-          <Image
-            source={require('@/assets/images/dp.jpg')}
-            style={styles.avatarImage}
-          />
-        </View>
-      </View>
+    <ScrollView style={commonStyles.container} showsVerticalScrollIndicator={false}>
+      {/* 1. Replace the old header View with the CommonHeader component.
+        2. Seller's header is non-collapsible, so it's placed directly in the ScrollView.
+      */}
+      <CommonHeader
+        type="seller"
+        userName="Randika Perera"
+        greeting="Good Morning!"
+        // Add a placeholder route or leave empty if the seller profile route is not defined yet
+        profileRoute="/seller-profile" 
+      />
 
       <View style={styles.content}>
+        {/* ... (Rest of the screen content) ... */}
         <Text style={styles.sectionTitle}>Quick Stats</Text>
 
         <View style={styles.statsGrid}>
@@ -107,6 +112,7 @@ export default function SellerHomeScreen() {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
