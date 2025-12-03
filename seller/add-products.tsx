@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -38,7 +39,10 @@ export default function AddProductsScreen() {
             <Text style={styles.greeting}>Good Morning!</Text>
           </View>
           <View style={styles.avatar}>
-            <View style={styles.avatarCircle} />
+            <Image
+              source={require('@/assets/images/dp.jpg')}
+              style={styles.avatarImage}
+            />
           </View>
         </View>
 
@@ -247,17 +251,15 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#E5E5EA',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#7C3AED',
+    borderColor: '#1C6055',
+    overflow: 'hidden',
   },
-  avatarCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#C7C7CD',
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   title: {
     fontSize: 22,
