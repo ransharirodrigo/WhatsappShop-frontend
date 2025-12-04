@@ -84,7 +84,7 @@ export default function MyOrdersScreen() {
       >
         <View>
           <CommonHeader
-            type="buyer"
+            type="seller"
             userName="Randika Perera"
             greeting="Good Morning!"
             profileRoute="/buyer-profile"
@@ -106,7 +106,7 @@ export default function MyOrdersScreen() {
                 onPress={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
               >
                 <Image
-                  source={viewMode === 'list' 
+                  source={viewMode === 'list'
                     ? require('@/assets/images/my_orders_images/Grid.png')
                     : require('@/assets/images/my_orders_images/List.png')
                   }
@@ -119,8 +119,8 @@ export default function MyOrdersScreen() {
 
           <View style={viewMode === 'grid' ? styles.ordersGrid : styles.ordersList}>
             {orders.map((order) => (
-              <View 
-                key={order.id} 
+              <View
+                key={order.id}
                 style={viewMode === 'grid' ? styles.orderGridCard : styles.orderCard}
               >
                 <View style={viewMode === 'grid' ? styles.gridItemContent : styles.orderItemContent}>
@@ -133,11 +133,11 @@ export default function MyOrdersScreen() {
                   </View>
 
                   <View style={viewMode === 'grid' ? styles.gridOrderInfo : styles.orderInfo}>
-                    <Text 
+                    <Text
                       style={[
                         styles.orderName,
                         viewMode === 'list' && styles.orderNameListLeft
-                      ]} 
+                      ]}
                       numberOfLines={viewMode === 'grid' ? 2 : 1}
                     >
                       {order.name}
