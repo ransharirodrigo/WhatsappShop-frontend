@@ -3,13 +3,13 @@ import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Image,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    Image,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 const MOCK_PRODUCTS: Record<string, {
@@ -217,7 +217,15 @@ export default function ProductDetailScreen() {
           </View>
 
           <View style={styles.actionRow}>
-            <TouchableOpacity style={[styles.actionButton, styles.buyNowButton]}>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.buyNowButton]}
+              onPress={() =>
+                router.push({
+                  pathname: '/order-confirmation',
+                  params: { price: productData.price },
+                })
+              }
+            >
               <Text style={styles.buyNowText}>Buy Now</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.actionButton, styles.codButton]}>
