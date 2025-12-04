@@ -1,48 +1,44 @@
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { commonStyles } from '@/assets/css/common_styles';
+import { CommonHeader } from '@/components/CommonHeader';
+import { useAppMode } from '@/contexts/app-mode-context';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+type OrderStatus = 'on the way' | 'delivered' | 'processing' | 'pending' | 'cancelled';
 
-interface Order {
-  id: string;
-  date: string;
+interface OrderItem {
+  id: number;
+  name: string;
+  quantity: number;
+  price: string;
+  image: any;
   status: OrderStatus;
-  items: Array<{ name: string; quantity: number; price: string; image: string }>;
-  total: string;
-  orderNumber: string;
 }
 
 export default function MyOrdersScreen() {
-  const orders: Order[] = [
+  const router = useRouter();
+  const { toggleMode } = useAppMode();
+  const [viewMode, setViewMode] = useState('list');
+  const [sortBy, setSortBy] = useState('Latest');
+
+  const orders: OrderItem[] = [
     {
-      id: '1',
-      orderNumber: 'ORD-2024-001',
-      date: '2024-01-15',
+      id: 1,
+      name: 'iPhone 16 pro',
+      quantity: 1,
+      price: 'LKR 320,000',
+      image: require('@/assets/images/order_confirmation_page_images/Plus Math.png'),
+      status: 'on the way',
+    },
+    {
+      id: 2,
+      name: 'Forrero Rocher',
+      quantity: 1,
+      price: 'LKR 7,000',
+      image: require('@/assets/images/order_confirmation_page_images/Cash.png'),
       status: 'delivered',
-      total: 'LKR 250,000',
-      items: [
-        { name: 'Electric Bicycle', quantity: 1, price: 'LKR 250,000', image: '🚴' },
-      ],
-    },
-    {
-      id: '2',
-      orderNumber: 'ORD-2024-002',
-      date: '2024-01-10',
-      status: 'shipped',
-      total: 'LKR 240,000',
-      items: [
-        { name: 'iPhone 15 pro', quantity: 1, price: 'LKR 240,000', image: '📱' },
-      ],
-    },
-    {
-      id: '3',
-      orderNumber: 'ORD-2024-003',
-      date: '2024-01-08',
-      status: 'processing',
-      total: 'LKR 370,000',
-      items: [
-        { name: 'Mac Mini M4', quantity: 1, price: 'LKR 370,000', image: '💻' },
-      ],
     },
   ];
 
@@ -50,10 +46,10 @@ export default function MyOrdersScreen() {
     switch (status) {
       case 'delivered':
         return '#34C488';
-      case 'shipped':
-        return '#4A90E2';
-      case 'processing':
+      case 'on the way':
         return '#FFA500';
+      case 'processing':
+        return '#4A90E2';
       case 'pending':
         return '#FFA500';
       case 'cancelled':
@@ -63,261 +59,348 @@ export default function MyOrdersScreen() {
     }
   };
 
-  const getStatusIcon = (status: OrderStatus) => {
+  const getStatusBackgroundColor = (status: OrderStatus) => {
     switch (status) {
       case 'delivered':
-        return 'checkmark.circle.fill';
-      case 'shipped':
-        return 'shippingbox.fill';
+        return '#E8F5E9';
+      case 'on the way':
+        return '#FFF3E0';
       case 'processing':
-        return 'clock.fill';
+        return '#E3F2FD';
       case 'pending':
-        return 'hourglass';
+        return '#FFF3E0';
       case 'cancelled':
-        return 'xmark.circle.fill';
+        return '#FFEBEE';
       default:
-        return 'circle';
+        return '#F5F5F5';
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Orders</Text>
-        <Text style={styles.headerSubtitle}>{orders.length} orders</Text>
-      </View>
+    <View style={commonStyles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View>
+          <CommonHeader
+            type="buyer"
+            userName="Randika Perera"
+            greeting="Good Morning!"
+            profileRoute="/buyer-profile"
+          />
+        </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {orders.length === 0 ? (
-          <View style={styles.emptyState}>
-            <IconSymbol name="box" size={64} color="#ccc" />
-            <Text style={styles.emptyTitle}>No Orders Yet</Text>
-            <Text style={styles.emptyText}>Your order history will appear here</Text>
+        <View style={styles.content}>
+          <View style={styles.headerRow}>
+            <Text style={styles.sectionTitle}>My Orders</Text>
+            <View style={styles.headerControls}>
+              <View style={styles.sortRow}>
+                <Text style={styles.sortLabel}>sort by</Text>
+                <TouchableOpacity style={styles.sortDropdown}>
+                  <Text style={styles.sortValue}>{sortBy} ▾</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                style={styles.viewToggleButton}
+                onPress={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
+              >
+                <Image
+                  source={viewMode === 'list' 
+                    ? require('@/assets/images/my_orders_images/Grid.png')
+                    : require('@/assets/images/my_orders_images/List.png')
+                  }
+                  style={styles.toggleIcon}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        ) : (
-          <View style={styles.ordersList}>
+
+          <View style={viewMode === 'grid' ? styles.ordersGrid : styles.ordersList}>
             {orders.map((order) => (
-              <View key={order.id} style={styles.orderCard}>
-                <View style={styles.orderHeader}>
-                  <View>
-                    <Text style={styles.orderNumber}>{order.orderNumber}</Text>
-                    <Text style={styles.orderDate}>Ordered on {order.date}</Text>
-                  </View>
-                  <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.status) + '20' }]}>
-                    <IconSymbol
-                      name={getStatusIcon(order.status) as any}
-                      size={14}
-                      color={getStatusColor(order.status)}
+              <View 
+                key={order.id} 
+                style={viewMode === 'grid' ? styles.orderGridCard : styles.orderCard}
+              >
+                <View style={viewMode === 'grid' ? styles.gridItemContent : styles.orderItemContent}>
+                  <View style={viewMode === 'grid' ? styles.gridImageContainer : styles.imageContainer}>
+                    <Image
+                      source={order.image}
+                      style={styles.orderImage}
+                      resizeMode="cover"
                     />
-                    <Text style={[styles.statusText, { color: getStatusColor(order.status) }]}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  </View>
+
+                  <View style={viewMode === 'grid' ? styles.gridOrderInfo : styles.orderInfo}>
+                    <Text 
+                      style={[
+                        styles.orderName,
+                        viewMode === 'list' && styles.orderNameListLeft
+                      ]} 
+                      numberOfLines={viewMode === 'grid' ? 2 : 1}
+                    >
+                      {order.name}
                     </Text>
+                    <View
+                      style={[
+                        styles.statusBadge,
+                        viewMode === 'grid' && styles.statusBadgeGridCenter,
+                        { backgroundColor: getStatusBackgroundColor(order.status) },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.statusBadgeText,
+                          { color: getStatusColor(order.status) },
+                        ]}
+                      >
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
 
-                <View style={styles.orderItems}>
-                  {order.items.map((item, index) => (
-                    <View key={index} style={styles.orderItem}>
-                      <View style={styles.orderItemImage}>
-                        <Text style={styles.orderItemEmoji}>{item.image}</Text>
-                      </View>
-                      <View style={styles.orderItemInfo}>
-                        <Text style={styles.orderItemName}>{item.name}</Text>
-                        <Text style={styles.orderItemDetails}>
-                          Qty: {item.quantity} • {item.price}
-                        </Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
+                {viewMode === 'list' && (
+                  <View style={styles.priceContainer}>
+                    <Text style={styles.orderPrice}>{order.price}</Text>
+                  </View>
+                )}
 
-                <View style={styles.orderFooter}>
-                  <Text style={styles.totalLabel}>Total</Text>
-                  <Text style={styles.totalAmount}>{order.total}</Text>
-                </View>
-
-                <View style={styles.orderActions}>
-                  {order.status === 'delivered' && (
-                    <TouchableOpacity style={styles.actionButton}>
-                      <Text style={styles.actionButtonText}>Reorder</Text>
-                    </TouchableOpacity>
-                  )}
-                  <TouchableOpacity style={[styles.actionButton, styles.viewDetailsButton]}>
-                    <Text style={styles.viewDetailsText}>View Details</Text>
-                  </TouchableOpacity>
-                </View>
+                {viewMode === 'grid' && (
+                  <View style={styles.gridPriceContainer}>
+                    <Text style={styles.orderPrice}>{order.price}</Text>
+                  </View>
+                )}
               </View>
             ))}
           </View>
-        )}
+        </View>
       </ScrollView>
+
+      <View style={styles.bottomNavContainer}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/')}
+        >
+          <FontAwesome5 name="home" size={24} color="#7A9B94" />
+          <Text style={styles.navLabelInactive}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/fav-items')}
+        >
+          <FontAwesome5 name="heart" size={24} color="#7A9B94" />
+          <Text style={styles.navLabelInactive}>Fav Items</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/add')}
+        >
+          <FontAwesome5 name="plus-circle" size={24} color="#7A9B94" />
+          <Text style={styles.navLabelInactive}>Add</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/my-orders')}
+        >
+          <FontAwesome5 name="box" size={24} color="#34C488" />
+          <Text style={styles.navLabelActive}>My orders</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={toggleMode}
+        >
+          <FontAwesome5 name="retweet" size={24} color="#7A9B94" />
+          <Text style={styles.navLabelInactive}>Become a Seller</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
+  scrollContent: {
+    paddingBottom: 120,
   },
-  header: {
-    backgroundColor: '#34C488',
-    paddingTop: 50,
-    paddingBottom: 20,
+  content: {
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#e0f2e0',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  ordersList: {
-    padding: 20,
-    gap: 15,
-  },
-  orderCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  orderHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 16,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  orderNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-  },
-  orderDate: {
-    fontSize: 12,
-    color: '#666',
-  },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
-    gap: 6,
-  },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  orderItems: {
-    marginBottom: 16,
-    gap: 12,
-  },
-  orderItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  orderItemImage: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  orderItemEmoji: {
-    fontSize: 24,
-  },
-  orderItemInfo: {
-    flex: 1,
-  },
-  orderItemName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  orderItemDetails: {
-    fontSize: 12,
-    color: '#666',
-  },
-  orderFooter: {
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 16,
     marginBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
   },
-  totalLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#2B2B2B',
   },
-  totalAmount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#34C488',
-  },
-  orderActions: {
+  headerControls: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 8,
-    backgroundColor: '#34C488',
+  sortRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  sortLabel: {
+    fontSize: 11,
+    color: '#777777',
+  },
+  sortDropdown: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  sortValue: {
+    fontSize: 11,
+    color: '#494949',
+  },
+  viewToggleButton: {
+    padding: 6,
+  },
+  toggleIcon: {
+    width: 18,
+    height: 18,
+  },
+  ordersList: {
+    gap: 12,
+  },
+  ordersGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  orderCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
+  },
+  orderGridCard: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
     alignItems: 'center',
   },
-  actionButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  viewDetailsButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#34C488',
-  },
-  viewDetailsText: {
-    color: '#34C488',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  emptyState: {
+  orderItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
+  },
+  gridItemContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  imageContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginRight: 12,
+    backgroundColor: '#F5F5F5',
+  },
+  gridImageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 12,
+    backgroundColor: '#F5F5F5',
+  },
+  orderImage: {
+    width: '100%',
+    height: '100%',
+  },
+  orderInfo: {
+    flex: 1,
+  },
+  gridOrderInfo: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  orderName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2B2B2B',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  orderNameListLeft: {
+    textAlign: 'left',
+  },
+  statusBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  statusBadgeGridCenter: {
+    alignSelf: 'center',
+  },
+  statusBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  priceContainer: {
+    marginLeft: 10,
+  },
+  gridPriceContainer: {
+    width: '100%',
+    marginTop: 12,
+    alignItems: 'center',
+  },
+  orderPrice: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#34C488',
+  },
+  bottomNavContainer: {
+    height: 80,
+    backgroundColor: '#1C6055',
+    borderTopWidth: 0,
+    borderRadius: 30,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  navItem: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 100,
   },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 20,
-    marginBottom: 8,
+  navLabelActive: {
+    marginTop: 4,
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#34C488',
   },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+  navLabelInactive: {
+    marginTop: 4,
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#7A9B94',
   },
 });
