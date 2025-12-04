@@ -4,7 +4,7 @@ import { useAppMode } from '@/contexts/app-mode-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type OrderStatus = 'on the way' | 'delivered' | 'processing' | 'pending' | 'cancelled';
 
@@ -22,6 +22,8 @@ export default function MyOrdersScreen() {
   const { toggleMode } = useAppMode();
   const [viewMode, setViewMode] = useState('list');
   const [sortBy, setSortBy] = useState('Latest');
+  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const orders: OrderItem[] = [
     {
@@ -76,6 +78,16 @@ export default function MyOrdersScreen() {
     }
   };
 
+  const openOrderDetails = (order: OrderItem) => {
+    setSelectedOrder(order);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedOrder(null);
+  };
+
   return (
     <View style={commonStyles.container}>
       <ScrollView
@@ -119,9 +131,10 @@ export default function MyOrdersScreen() {
 
           <View style={viewMode === 'grid' ? styles.ordersGrid : styles.ordersList}>
             {orders.map((order) => (
-              <View
+              <TouchableOpacity
                 key={order.id}
                 style={viewMode === 'grid' ? styles.orderGridCard : styles.orderCard}
+                onPress={() => openOrderDetails(order)}
               >
                 <View style={viewMode === 'grid' ? styles.gridItemContent : styles.orderItemContent}>
                   <View style={viewMode === 'grid' ? styles.gridImageContainer : styles.imageContainer}>
@@ -172,11 +185,72 @@ export default function MyOrdersScreen() {
                     <Text style={styles.orderPrice}>{order.price}</Text>
                   </View>
                 )}
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Order Details</Text>
+              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                <FontAwesome5 name="times" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            {selectedOrder && (
+              <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
+                <View style={styles.modalImageContainer}>
+                  <Image
+                    source={selectedOrder.image}
+                    style={styles.modalImage}
+                    resizeMode="cover"
+                  />
+                  <View style={[styles.statusBadgeModal, { backgroundColor: getStatusBackgroundColor(selectedOrder.status) }]}>
+                    <Text style={[styles.statusBadgeText, { color: getStatusColor(selectedOrder.status) }]}>
+                      {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.modalDetails}>
+                  <View style={styles.modalTitlePriceRow}>
+                    <Text style={styles.modalProductName}>{selectedOrder.name}</Text>
+                    <Text style={styles.modalProductPrice}>{selectedOrder.price}</Text>
+                  </View>
+
+                  <View style={styles.modalInfoRowHorizontal}>
+                    <View style={styles.modalInfoColumn}>
+                      <Text style={styles.modalInfoLabel}>Seller</Text>
+                      <Text style={styles.modalInfoValue}>AppMoto</Text>
+                    </View>
+
+                    <View style={styles.modalInfoColumn}>
+                      <Text style={styles.modalInfoLabel}>Order Date</Text>
+                      <Text style={styles.modalInfoValue}>2025-01-20</Text>
+                    </View>
+
+                    {selectedOrder.status === 'delivered' && (
+                      <View style={styles.modalInfoColumn}>
+                        <Text style={styles.modalInfoLabel}>Delivered Date</Text>
+                        <Text style={styles.modalInfoValue}>2025-01-23</Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              </ScrollView>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       <View style={styles.bottomNavContainer}>
         <TouchableOpacity
@@ -402,5 +476,118 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '500',
     color: '#7A9B94',
+  },
+
+  // ⭐ NEW CENTERED MODAL ⭐
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',   // Center vertically
+    alignItems: 'center',       // Center horizontally
+  },
+
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    width: '90%',               // Popup width
+    maxHeight: '80%',           // Prevent oversized modal
+    paddingBottom: 20,
+    overflow: 'hidden',
+  },
+
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#333',
+  },
+  closeButton: {
+    padding: 12,
+    marginRight: -12,
+  },
+  modalBody: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  modalImageContainer: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 20,
+    position: 'relative',
+  },
+  modalImage: {
+    width: '100%',
+    height: '100%',
+  },
+  statusBadgeModal: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  modalDetails: {
+    marginBottom: 20,
+  },
+  modalTitlePriceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  modalProductName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#333',
+    flex: 1,
+  },
+  modalProductPrice: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#34C488',
+    marginLeft: 10,
+  },
+  modalInfoRowHorizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    gap: 12,
+  },
+  modalInfoColumn: {
+    flex: 1,
+  },
+  modalInfoLabel: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  modalInfoValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
+  },
+  modalActionButton: {
+    paddingVertical: 14,
+    backgroundColor: '#34C488',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalActionButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
