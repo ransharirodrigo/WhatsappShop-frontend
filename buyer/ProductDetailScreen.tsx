@@ -3,13 +3,13 @@ import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    Image,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Image,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 const MOCK_PRODUCTS: Record<string, {
@@ -129,10 +129,7 @@ export default function ProductDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
      
         <View style={styles.imageGallery}>
           <Image
@@ -512,5 +509,31 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '500',
     color: '#7A9B94',
+  },
+  bottomNavigation: {
+    height: 80,
+    backgroundColor: '#27474E',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  navLabel: {
+    color: '#999',
+    fontSize: 12,
+    marginTop: 4,
   },
 });

@@ -44,7 +44,7 @@ export default function OrderConfirmationScreen() {
         <View style={styles.content}>
           <View style={styles.illustrationCircle}>
             <Image
-              source={require('@/assets/order_confirmation_page_images/circle with checkmark.png')}
+              source={require('@/assets/images/order_confirmation_page_images/circle with checkmark.png')}
               style={styles.illustrationImage}
               resizeMode="contain"
             />
@@ -91,28 +91,28 @@ export default function OrderConfirmationScreen() {
             <View style={styles.paymentRow}>
               <View style={styles.paymentCard}>
                 <Image
-                  source={require('@/assets/order_confirmation_page_images/Cash.png')}
+                  source={require('@/assets/images/order_confirmation_page_images/Cash.png')}
                   style={styles.paymentImage}
                   resizeMode="contain"
                 />
               </View>
               <View style={styles.paymentCard}>
                 <Image
-                  source={require('@/assets/order_confirmation_page_images/Card.png')}
+                  source={require('@/assets/images/order_confirmation_page_images/Card.png')}
                   style={styles.paymentImage}
                   resizeMode="contain"
                 />
               </View>
               <View style={styles.paymentCard}>
                 <Image
-                  source={require('@/assets/order_confirmation_page_images/Koko.png')}
+                  source={require('@/assets/images/order_confirmation_page_images/Koko.png')}
                   style={styles.paymentImage}
                   resizeMode="contain"
                 />
               </View>
               <View style={styles.paymentCard}>
                 <Image
-                  source={require('@/assets/order_confirmation_page_images/Mint.png')}
+                  source={require('@/assets/images/order_confirmation_page_images/Mint.png')}
                   style={styles.paymentImage}
                   resizeMode="contain"
                 />
