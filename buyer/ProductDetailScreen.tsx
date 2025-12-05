@@ -129,10 +129,7 @@ export default function ProductDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
      
         <View style={styles.imageGallery}>
           <Image
@@ -217,7 +214,15 @@ export default function ProductDetailScreen() {
           </View>
 
           <View style={styles.actionRow}>
-            <TouchableOpacity style={[styles.actionButton, styles.buyNowButton]}>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.buyNowButton]}
+              onPress={() =>
+                router.push({
+                  pathname: '/order-confirmation',
+                  params: { price: productData.price },
+                })
+              }
+            >
               <Text style={styles.buyNowText}>Buy Now</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.actionButton, styles.codButton]}>
@@ -504,5 +509,31 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '500',
     color: '#7A9B94',
+  },
+  bottomNavigation: {
+    height: 80,
+    backgroundColor: '#27474E',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  navLabel: {
+    color: '#999',
+    fontSize: 12,
+    marginTop: 4,
   },
 });
