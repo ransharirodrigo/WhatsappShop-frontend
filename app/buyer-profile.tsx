@@ -17,6 +17,9 @@ export default function BuyerProfileScreen() {
     { id: 4, title: 'Addresses', icon: 'location', route: null },
     { id: 5, title: 'Settings', icon: 'gearshape', route: null },
     { id: 6, title: 'Help & Support', icon: 'questionmark.circle', route: null },
+    { id: 7, title: 'Profile Setting', icon: 'person.crop.circle', route: '/ProfileSetting' },
+    { id: 8, title: 'Help Desk', icon: 'person.crop.circle', route: '/HelpDesk' },
+
   ];
 
   return (
