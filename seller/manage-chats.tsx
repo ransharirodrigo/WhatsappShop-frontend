@@ -41,7 +41,6 @@ export default function ManageChatsScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 
-        {/* ⭐ COMMON HEADER (same as in BusinessSuitScreen) */}
         <CommonHeader
           type="seller"
           userName="Randika Perera"
