@@ -46,7 +46,7 @@ export default function ManageChatsScreen() {
           type="seller"
           userName="Randika Perera"
           greeting="Good Morning!"
-          profileRoute="/buyer-profile"
+          profileRoute="/SellerProfile"
         />
 
         {/* Tabs */}
