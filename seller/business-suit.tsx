@@ -97,9 +97,8 @@ export default function BusinessSuitScreen() {
             <Text style={styles.productsTitle}>Your products</Text>
             <View style={styles.sortContainer}>
               <Text style={styles.sortLabel}>sort by</Text>
-              <TouchableOpacity style={styles.sortButton}>
-                <Text style={styles.sortValue}>{sortBy}</Text>
-                <Ionicons name="chevron-down" size={16} color="#000" />
+              <TouchableOpacity style={styles.sortDropdown}>
+                <Text style={styles.sortValue}>Latest ▾</Text>
               </TouchableOpacity>
 
               {/* Single Toggle Button */}
@@ -185,214 +184,220 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  profileCard: { 
-    flexDirection: 'row', 
-    backgroundColor: '#FFF', 
-    borderRadius: 16, 
-    padding: 16, 
-    marginBottom: 20 
+  profileCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20
   },
   logoContainer: { marginRight: 16 },
-  logo: { 
-    width: 100, 
-    height: 100, 
-    borderRadius: 50, 
-    backgroundColor: '#F5F5F5', 
-    borderWidth: 2, 
-    borderColor: '#E5E5EA', 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  logo: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#F5F5F5',
+    borderWidth: 2,
+    borderColor: '#E5E5EA',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   businessInfo: { flex: 1 },
-  businessName: { 
-    fontSize: 20, 
-    fontWeight: '600', 
-    color: '#000', 
-    marginBottom: 8 
+  businessName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 8
   },
-  businessDescription: { 
-    fontSize: 13, 
-    color: '#8E8E93', 
-    lineHeight: 18, 
-    marginBottom: 4 
+  businessDescription: {
+    fontSize: 13,
+    color: '#8E8E93',
+    lineHeight: 18,
+    marginBottom: 4
   },
-  readMore: { 
-    fontSize: 13, 
-    color: '#10B981', 
-    fontWeight: '500', 
-    marginBottom: 12 
+  readMore: {
+    fontSize: 13,
+    color: '#10B981',
+    fontWeight: '500',
+    marginBottom: 12
   },
-  categoryContainer: { 
-    flexDirection: 'row', 
-    alignItems: 'center' 
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  categoryLabel: { 
-    fontSize: 14, 
-    color: '#000', 
-    fontWeight: '500', 
-    marginRight: 8 
+  categoryLabel: {
+    fontSize: 14,
+    color: '#000',
+    fontWeight: '500',
+    marginRight: 8
   },
-  categoryBadge: { 
-    backgroundColor: '#10B981', 
-    paddingHorizontal: 16, 
-    paddingVertical: 6, 
-    borderRadius: 8 
+  categoryBadge: {
+    backgroundColor: '#10B981',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 8
   },
-  categoryText: { 
-    fontSize: 13, 
-    color: '#FFF', 
-    fontWeight: '600' 
+  categoryText: {
+    fontSize: 13,
+    color: '#FFF',
+    fontWeight: '600'
   },
 
-  statsContainer: { 
-    flexDirection: 'row', 
-    backgroundColor: '#FFF', 
-    borderRadius: 16, 
-    padding: 20, 
-    marginBottom: 20, 
-    alignItems: 'center' 
+  statsContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    alignItems: 'center'
   },
-  statsRow: { 
-    flex: 1, 
-    flexDirection: 'row', 
-    alignItems: 'center' 
+  statsRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   statItem: { flex: 1 },
-  statLabel: { 
-    fontSize: 14, 
-    color: '#8E8E93', 
-    marginBottom: 4 
+  statLabel: {
+    fontSize: 14,
+    color: '#8E8E93',
+    marginBottom: 4
   },
-  statValue: { 
-    fontSize: 32, 
-    fontWeight: '600', 
-    color: '#000' 
+  statValue: {
+    fontSize: 32,
+    fontWeight: '600',
+    color: '#000'
   },
-  divider: { 
-    width: 1, 
-    height: 40, 
-    backgroundColor: '#E5E5EA', 
-    marginHorizontal: 20 
+  divider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E5E5EA',
+    marginHorizontal: 20
   },
-  shopSettings: { 
-    paddingHorizontal: 16, 
-    paddingVertical: 8 
+  shopSettings: {
+    paddingHorizontal: 16,
+    paddingVertical: 8
   },
-  shopSettingsText: { 
-    fontSize: 14, 
-    color: '#10B981', 
-    fontWeight: '500', 
-    textAlign: 'center', 
-    lineHeight: 18 
+  shopSettingsText: {
+    fontSize: 14,
+    color: '#10B981',
+    fontWeight: '500',
+    textAlign: 'center',
+    lineHeight: 18
   },
 
-  productsHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 16 
+  productsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16
   },
-  productsTitle: { 
-    fontSize: 18, 
-    fontWeight: '600', 
-    color: '#000' 
+  productsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000'
   },
-  sortContainer: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 8 
+  sortContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
   },
-  sortLabel: { 
-    fontSize: 14, 
-    color: '#8E8E93' 
+  sortLabel: {
+    fontSize: 14,
+    color: '#8E8E93'
   },
-  sortButton: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 4 
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4
   },
-  sortValue: { 
-    fontSize: 14, 
-    fontWeight: '500', 
-    color: '#000' 
+  sortValue: {
+    fontSize: 11,
+    color: '#494949',
   },
-  viewIcon: { 
-    width: 24, 
-    height: 24, 
-    marginLeft: 8 
+  viewIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 8
   },
 
   productsList: { gap: 12 },
-  productItem: { 
-    flexDirection: 'row', 
-    backgroundColor: '#FFF', 
-    borderRadius: 12, 
-    padding: 12, 
-    alignItems: 'center', 
-    marginBottom: 12 
+  productItem: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    marginBottom: 12
   },
-  productImage: { 
-    width: 60, 
-    height: 60, 
-    borderRadius: 10, 
-    backgroundColor: '#F5F5F5', 
-    marginRight: 12, 
-    overflow: 'hidden' 
+  productImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    backgroundColor: '#F5F5F5',
+    marginRight: 12,
+    overflow: 'hidden'
   },
-  imagePlaceholder: { 
-    width: '100%', 
-    height: '100%', 
-    backgroundColor: '#E5E5EA' 
+  imagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#E5E5EA'
   },
   productDetails: { flex: 1 },
-  productName: { 
-    fontSize: 16, 
-    fontWeight: '600', 
-    color: '#000', 
-    marginBottom: 4 
+  productName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4
   },
-  productMeta: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 12 
+  productMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12
   },
-  productPrice: { 
-    fontSize: 14, 
-    color: '#8E8E93' 
+  productPrice: {
+    fontSize: 14,
+    color: '#8E8E93'
   },
-  productStatus: { 
-    fontSize: 14, 
-    fontWeight: '500', 
-    color: '#10B981' 
+  productStatus: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#10B981'
   },
-  productStatusDeactive: { 
-    color: '#EF4444' 
+  productStatusDeactive: {
+    color: '#EF4444'
   },
-  deleteButton: { 
-    backgroundColor: '#EF4444', 
-    paddingHorizontal: 20, 
-    paddingVertical: 10, 
-    borderRadius: 8 
+  deleteButton: {
+    backgroundColor: '#EF4444',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8
   },
-  deleteButtonText: { 
-    fontSize: 14, 
-    fontWeight: '600', 
-    color: '#FFF' 
+  deleteButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFF'
   },
 
-  gridContainer: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    justifyContent: 'space-between', 
-    gap: 12, 
-    paddingHorizontal: 0 
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+    paddingHorizontal: 0
   },
-  gridItem: { 
-    width: '48%', 
-    backgroundColor: '#FFF', 
-    borderRadius: 12, 
-    padding: 12, 
-    marginBottom: 12, 
-    alignItems: 'center' 
+  gridItem: {
+    width: '48%',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    alignItems: 'center'
+  },
+  sortDropdown: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
 });
