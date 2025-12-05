@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
+import { router } from 'expo-router';
 
 interface Product {
   id: string;
@@ -87,7 +88,12 @@ export default function BusinessSuitScreen() {
                 <Text style={styles.statValue}>03</Text>
               </View>
             </View>
-            <TouchableOpacity style={styles.shopSettings}>
+            <TouchableOpacity
+              style={styles.shopSettings}
+              onPress={() => {
+                router.push('/SellerStoreUpdate');
+              }}
+            >
               <Text style={styles.shopSettingsText}>Shop{'\n'}Settings</Text>
             </TouchableOpacity>
           </View>
