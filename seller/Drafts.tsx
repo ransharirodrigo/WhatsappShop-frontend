@@ -1,15 +1,27 @@
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
 import { useAppMode } from '@/contexts/app-mode-context';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function SellerDrafts() {
-  const [sortBy, setSortBy] = useState('Latest');
   const router = useRouter();
-  const { mode, toggleMode } = useAppMode();
+  const { mode } = useAppMode();
+
+  const [sortBy, setSortBy] = useState('Latest');
+  const [viewType, setViewType] = useState<'list' | 'grid'>('list');
+
+  const toggleView = () => {
+    setViewType(viewType === 'list' ? 'grid' : 'list');
+  };
 
   const draftProducts = [
     { id: 1, name: 'iPhone 16 Pro', price: '350,000', image: '📱' },
@@ -20,9 +32,8 @@ export default function SellerDrafts() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F7F7F7' }}>
-      {/* Main Scroll Content */}
-      <ScrollView 
-        style={commonStyles.container} 
+      <ScrollView
+        style={commonStyles.container}
         contentContainerStyle={{ paddingBottom: 120 }}
       >
         <CommonHeader
@@ -34,48 +45,62 @@ export default function SellerDrafts() {
 
         <View style={styles.content}>
 
-          {/* Header */}
+          {/* HEADER */}
           <View style={styles.draftHeader}>
             <Text style={styles.draftTitle}>Your Draft</Text>
 
-            <View style={styles.headerActions}>
-              <TouchableOpacity style={styles.sortButton}>
-                <Text style={styles.sortText}>sort by</Text>
-                <Text style={styles.sortValue}>{sortBy}</Text>
-                <Text style={styles.sortIcon}>▼</Text>
+            <View style={styles.sortContainer}>
+              <Text style={styles.sortLabel}>sort by</Text>
+
+              <TouchableOpacity style={styles.sortDropdown}>
+                <Text style={styles.sortValue}>{sortBy} ▾</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.listViewButton}>
-                <View style={styles.listViewIcon}>
-                  <View style={styles.listLine} />
-                  <View style={styles.listLine} />
-                  <View style={styles.listLine} />
-                </View>
+              <TouchableOpacity onPress={toggleView}>
+                <Image
+                  source={
+                    viewType === 'list'
+                      ? require('@/assets/images/business_suit_images/Grid.png')
+                      : require('@/assets/images/business_suit_images/List.png')
+                  }
+                  style={styles.viewIcon}
+                />
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* Product Draft List */}
-          <View style={styles.productsContainer}>
-            {draftProducts.map(product => (
-              <TouchableOpacity 
-                key={product.id}
-                style={styles.productCard}
-              >
-                <View style={styles.productImage}>
-                  <Text style={styles.productEmoji}>{product.image}</Text>
-                </View>
+          {/* PRODUCTS */}
+          {viewType === 'list' ? (
+            <View style={styles.productsContainer}>
+              {draftProducts.map(product => (
+                <TouchableOpacity key={product.id} style={styles.productCard}>
+                  <View style={styles.productImage}>
+                    <Text style={styles.productEmoji}>{product.image}</Text>
+                  </View>
 
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.productName}>{product.name}</Text>
-                  <Text style={styles.productPrice}>LKR {product.price}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.productName, { textAlign: 'left' }]}>{product.name}</Text>
+                    <Text style={[styles.productPrice, { textAlign: 'left' }]}>LKR {product.price}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.gridContainer}>
+              {draftProducts.map(product => (
+                <TouchableOpacity key={product.id} style={styles.gridItem}>
+                  <View style={styles.productImage}>
+                    <Text style={styles.productEmoji}>{product.image}</Text>
+                  </View>
+
+                  <Text style={[styles.productName, { textAlign: 'center' }]}>{product.name}</Text>
+                  <Text style={[styles.productPrice, { textAlign: 'center' }]}>LKR {product.price}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
-
     </View>
   );
 }
@@ -97,28 +122,35 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
   },
-  headerActions: {
+
+  sortContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 8,
   },
 
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+  sortLabel: {
+    fontSize: 14,
+    color: '#8E8E93',
   },
-  sortText: { fontSize: 14, color: '#888' },
-  sortValue: { fontSize: 14, fontWeight: '600', color: '#34C488' },
-  sortIcon: { fontSize: 10, color: '#34C488' },
 
-  listViewButton: { padding: 8 },
-  listViewIcon: { width: 22, height: 18, justifyContent: 'space-between' },
-  listLine: {
-    width: '100%',
-    height: 2,
-    backgroundColor: '#333',
-    borderRadius: 2,
+  sortValue: {
+    fontSize: 11,
+    color: '#494949',
+  },
+
+  sortDropdown: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+
+  viewIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 8,
   },
 
   productsContainer: { gap: 16 },
@@ -130,7 +162,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 3,
   },
-
   productImage: {
     width: 62,
     height: 62,
@@ -142,40 +173,28 @@ const styles = StyleSheet.create({
   },
   productEmoji: { fontSize: 32 },
 
-  productName: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
-  productPrice: { fontSize: 14, color: '#666' },
+  productName: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  productPrice: {
+    fontSize: 14,
+    color: '#666',
+  },
 
-  bottomNavContainer: {
-    height: 80,
-    backgroundColor: '#1C6055',
-    borderTopWidth: 0,
-    borderRadius: 30,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  gridContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  gridItem: {
+    width: '48%',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
     alignItems: 'center',
-    paddingBottom: 10,
-    paddingTop: 10,
-  },
-  navItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navLabelActive: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#34C488',
-  },
-  navLabelInactive: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#7A9B94',
   },
 });
