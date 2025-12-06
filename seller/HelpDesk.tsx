@@ -16,6 +16,7 @@ import { useAppMode } from "@/contexts/app-mode-context";
 export default function HelpDesk() {
   const router = useRouter();
 
+  // ✅ App Mode (added for consistency, not used yet)
   const { mode, toggleMode } = useAppMode();
 
   const [issue, setIssue] = useState("Technical");

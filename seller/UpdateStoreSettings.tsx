@@ -1,8 +1,9 @@
 import { commonStyles } from '@/assets/css/common_styles';
+import { useAppMode } from '@/contexts/app-mode-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View , Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 
 export default function UpdateShopScreen() {
   const [shopName, setShopName] = useState('');
@@ -10,6 +11,7 @@ export default function UpdateShopScreen() {
   const [aboutBusiness, setAboutBusiness] = useState('');
   const [logoImage, setLogoImage] = useState(null);
   const router = useRouter();
+  const { mode, toggleMode } = useAppMode();
 
   const handleLogoSelect = () => {
     // Implement logo selection functionality
@@ -100,48 +102,6 @@ export default function UpdateShopScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNavContainer}>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/')}
-        >
-          <FontAwesome5 name="home" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/fav-items')}
-        >
-          <FontAwesome5 name="heart" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Fav Items</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/add')}
-        >
-          <FontAwesome5 name="plus-circle" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Add</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/my-orders')}
-        >
-          <FontAwesome5 name="box" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>My Orders</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/seller')}
-        >
-          <FontAwesome5 name="retweet" size={24} color="#34C488" />
-          <Text style={styles.navLabelActive}>Seller</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
