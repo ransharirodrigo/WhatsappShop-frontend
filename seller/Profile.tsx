@@ -1,34 +1,37 @@
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useRouter } from 'expo-router';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { useState } from 'react';
 
 export const options = {
   headerShown: false,
 };
 
-export default function BuyerProfileScreen() {
+export default function SellerProfileScreen() {
   const router = useRouter();
+  const [sellerMode, setSellerMode] = useState(true);
+  const [notification, setNotification] = useState(true);
 
   const menuItems = [
-    { id: 1, title: 'My Orders', icon: 'box', route: '/(tabs)/my-orders' },
-    { id: 2, title: 'Favorite Items', icon: 'heart', route: '/(tabs)/fav-items' },
-    { id: 3, title: 'Payment Methods', icon: 'creditcard', route: null },
-    { id: 4, title: 'Addresses', icon: 'location', route: null },
-    { id: 5, title: 'Settings', icon: 'gearshape', route: null },
-    { id: 6, title: 'Help & Support', icon: 'questionmark.circle', route: null },
-    { id: 7, title: 'Profile Setting', icon: 'person.crop.circle', route: '/ProfileSetting' },
-    { id: 8, title: 'Help Desk', icon: 'person.crop.circle', route: '/HelpDesk' },
-
+    { id: 1, title: 'Orders', icon: 'box', route: '/(tabs)/my-orders' },
+    { id: 2, title: 'Top Selling Items', icon: 'chart.bar', route: '/(tabs)/top-selling' },
+    { id: 3, title: 'Shop Settings', icon: 'gearshape', route: '/ShopSettings' },
+    { id: 4, title: 'Help Desk', icon: 'questionmark.circle', route: '/HelpDesk' },
+    { id: 5, title: 'Profile Setting', icon: 'person.crop.circle', route: '/ProfileSetting' },
   ];
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Header Profile Section */}
         <View style={styles.profileSection}>
+          {/* Back Button */}
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <IconSymbol name="chevron.left" size={20} color="#333" />
           </TouchableOpacity>
+
+          {/* Avatar + Name */}
           <View style={styles.profileContent}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarRingContainer}>
@@ -46,6 +49,7 @@ export default function BuyerProfileScreen() {
                   />
                 </Svg>
               </View>
+
               <View style={styles.avatarContainer}>
                 <Image
                   source={require('@/assets/images/dp.jpg')}
@@ -53,16 +57,42 @@ export default function BuyerProfileScreen() {
                 />
               </View>
             </View>
+
             <Text style={styles.userName}>Randika Perera</Text>
+
+            {/* Account Status */}
             <View style={styles.accountStatusContainer}>
               <Text style={styles.accountStatusLabel}>Account status</Text>
-              <View style={styles.buyerBadge}>
-                <Text style={styles.buyerBadgeText}>Buyer</Text>
+              <View style={styles.sellerBadge}>
+                <Text style={styles.sellerBadgeText}>Seller</Text>
               </View>
             </View>
           </View>
         </View>
 
+        {/* Seller Mode Toggle */}
+        <View style={styles.switchRow}>
+          <Text style={styles.switchLabel}>Seller Mode</Text>
+          <Switch
+            value={sellerMode}
+            onValueChange={setSellerMode}
+            trackColor={{ false: '#ccc', true: '#A5E6C5' }}
+            thumbColor={sellerMode ? '#34C488' : '#999'}
+          />
+        </View>
+
+        {/* Notification Toggle */}
+        <View style={styles.switchRow}>
+          <Text style={styles.switchLabel}>Notification</Text>
+          <TouchableOpacity
+            style={[styles.notificationBadge, notification && styles.notificationBadgeActive]}
+            onPress={() => setNotification(!notification)}
+          >
+            <Text style={styles.notificationText}>{notification ? "02" : "00"}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Menu Items */}
         <View style={styles.menuSection}>
           {menuItems.map((item) => (
             <TouchableOpacity
@@ -81,33 +111,32 @@ export default function BuyerProfileScreen() {
           ))}
         </View>
 
+        {/* Log Out */}
         <TouchableOpacity style={styles.logoutButton}>
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
+
+        {/* Extra bottom spacing for global bottom navigation */}
+        <View style={styles.bottomSpacing} />
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  scrollView: {
-    flex: 1,
-  },
+  container: { flex: 1, backgroundColor: '#f5f5f5' },
+  scrollView: { flex: 1 },
+
   profileSection: {
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
     paddingTop: 20,
     paddingBottom: 30,
     paddingHorizontal: 20,
     marginBottom: 20,
     position: 'relative',
-    minHeight: 200,
   },
+
   backButton: {
     position: 'absolute',
     top: 20,
@@ -120,11 +149,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 10,
   },
-  profileContent: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
+  profileContent: { width: '100%', alignItems: 'center' },
+
   avatarWrapper: {
     position: 'relative',
     width: 120,
@@ -133,16 +160,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatarRingContainer: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarRing: {
-    position: 'absolute',
-  },
+
+  avatarRingContainer: { position: 'absolute', width: 120, height: 120 },
+
   avatarContainer: {
     width: 100,
     height: 100,
@@ -150,43 +170,51 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#8B7FFF',
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  accountStatusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  accountStatusLabel: {
-    fontSize: 14,
-    color: '#666',
-  },
-  buyerBadge: {
+
+  avatar: { width: 100, height: 100, borderRadius: 50 },
+
+  userName: { fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 12 },
+
+  accountStatusContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+
+  accountStatusLabel: { fontSize: 14, color: '#666' },
+
+  sellerBadge: {
     backgroundColor: '#34C488',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
   },
-  buyerBadgeText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  menuSection: {
+
+  sellerBadgeText: { color: '#fff', fontSize: 14, fontWeight: '600' },
+
+  switchRow: {
     backgroundColor: '#fff',
-    marginBottom: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
   },
+
+  switchLabel: { fontSize: 16, color: '#333', fontWeight: '500' },
+
+  notificationBadge: {
+    width: 40,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  notificationBadgeActive: { backgroundColor: '#34C488' },
+
+  notificationText: { color: '#fff', fontWeight: '600' },
+
+  menuSection: { backgroundColor: '#fff', marginBottom: 20 },
+
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -196,11 +224,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  menuItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
+
+  menuItemLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+
   menuIconContainer: {
     width: 40,
     height: 40,
@@ -210,11 +236,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  menuItemText: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
-  },
+
+  menuItemText: { fontSize: 16, color: '#333', fontWeight: '500' },
+
   logoutButton: {
     backgroundColor: '#fff',
     marginHorizontal: 20,
@@ -225,10 +249,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ff4444',
   },
-  logoutText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ff4444',
-  },
-});
 
+  logoutText: { fontSize: 16, fontWeight: '600', color: '#ff4444' },
+
+  bottomSpacing: { height: 80 },
+});

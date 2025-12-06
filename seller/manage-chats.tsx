@@ -1,30 +1,184 @@
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
+
+import { CommonHeader } from '@/components/CommonHeader';
+import { commonStyles } from '@/assets/css/common_styles';
+
+interface Chat {
+  id: string;
+  name: string;
+  message: string;
+  unreadCount: number;
+  avatarColor: string;
+}
 
 export default function ManageChatsScreen() {
+  const [activeTab, setActiveTab] = useState<'new' | 'unread'>('new');
+
+  const chats: Chat[] = [
+    { id: '1', name: 'John Smith', message: 'Hey Buddy', unreadCount: 2, avatarColor: '#5B5FFF' },
+    { id: '2', name: 'Tharushi', message: 'Gedara enne nadda miniyo', unreadCount: 10, avatarColor: '#1E40AF' },
+    { id: '3', name: 'Batman', message: 'I am on my duty', unreadCount: 1, avatarColor: '#0EA5E9' },
+    { id: '4', name: 'Cat woman', message: 'mage kama tika genawada', unreadCount: 32, avatarColor: '#8B5CF6' },
+    { id: '5', name: 'Samantha', message: 'the bonawada', unreadCount: 1, avatarColor: '#A855F7' },
+    { id: '6', name: 'Polleha gedara sunil', message: 'Machan enne nadd dnma', unreadCount: 3, avatarColor: '#EAB308' },
+    { id: '7', name: 'Tharushi ge kolla', message: 'Bosa', unreadCount: 42, avatarColor: '#7C3AED' },
+    { id: '8', name: 'Katta Kapila', message: 'Hey', unreadCount: 9, avatarColor: '#0891B2' },
+    { id: '9', name: 'Katta Kapila', message: 'Hey', unreadCount: 9, avatarColor: '#0891B2' },
+    { id: '10', name: 'Katta Kapila', message: 'Hey', unreadCount: 9, avatarColor: '#0891B2' },
+    { id: '11', name: 'Katta Kapila', message: 'Hey', unreadCount: 9, avatarColor: '#0891B2' },
+  ];
+
   return (
-    <ScrollView style={styles.container}>
-      <ThemedView style={styles.content}>
-        <ThemedText type="title">Manage Chats</ThemedText>
-        <ThemedView style={styles.section}>
-          <ThemedText>Chat with your customers</ThemedText>
-        </ThemedView>
-      </ThemedView>
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+
+        <CommonHeader
+          type="seller"
+          userName="Randika Perera"
+          greeting="Good Morning!"
+          profileRoute="/SellerProfile"
+        />
+
+        {/* Tabs */}
+        <View style={styles.tabsContainer}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'new' && styles.tabActive]}
+            onPress={() => setActiveTab('new')}
+          >
+            <Text style={[styles.tabText, activeTab === 'new' && styles.tabTextActive]}>
+              New
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'unread' && styles.tabActive]}
+            onPress={() => setActiveTab('unread')}
+          >
+            <Text style={[styles.tabText, activeTab === 'unread' && styles.tabTextActive]}>
+              Unread
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Chat List */}
+        <View style={styles.chatList}>
+          {chats.map(chat => (
+            <TouchableOpacity key={chat.id} style={styles.chatItem}>
+              <View style={[styles.chatAvatar, { backgroundColor: chat.avatarColor }]}>
+                <View style={styles.avatarIcon} />
+              </View>
+
+              <View style={styles.chatContent}>
+                <Text style={styles.chatName}>{chat.name}</Text>
+                <Text style={styles.chatMessage}>{chat.message}</Text>
+              </View>
+
+              <View style={styles.unreadBadge}>
+                <Text style={styles.unreadCount}>
+                  {chat.unreadCount.toString().padStart(2, '0')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.bottomSpacing} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, backgroundColor: '#F5F5F5'
   },
-  content: {
-    padding: 20,
-    gap: 16,
+  scrollView: {
+    flex: 1
   },
-  section: {
-    gap: 8,
-    marginTop: 16,
+  tabsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    marginTop: 20,
+    gap: 12,
   },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    backgroundColor: 'transparent',
+  },
+  tabActive: {
+    backgroundColor: '#0F766E',
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+  },
+  tabTextActive: {
+    color: '#FFF',
+  },
+
+  chatList: { paddingHorizontal: 20 },
+
+  chatItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5EA',
+  },
+
+  chatAvatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  avatarIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+
+  chatContent: { flex: 1 },
+  chatName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4,
+  },
+  chatMessage: {
+    fontSize: 14,
+    color: '#8E8E93',
+  },
+
+  unreadBadge: {
+    backgroundColor: '#10B981',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    minWidth: 36,
+    alignItems: 'center',
+  },
+  unreadCount: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+
+  bottomSpacing: { height: 40 },
 });

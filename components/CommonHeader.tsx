@@ -1,6 +1,6 @@
 import { commonStyles } from '@/assets/css/common_styles';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Common Header Component for Buyer and Seller screens.
@@ -9,11 +9,14 @@ import { useRouter } from 'expo-router';
  * @param {string} props.userName - The user's name.
  * @param {string} props.greeting - The greeting message.
  * @param {string} props.profileRoute - The route to navigate to on avatar press (optional).
+ * @param {boolean} props.showBackground - Whether to show background color (optional, default: true).
  */
-export function CommonHeader({ type, userName, greeting, profileRoute }) {
+export function CommonHeader({ type, userName, greeting, profileRoute, showBackground = true }) {
   const router = useRouter();
 
-  const headerStyle = type === 'buyer' ? commonStyles.buyerHeader : commonStyles.sellerHeader;
+  const headerStyle = showBackground 
+    ? (type === 'buyer' ? commonStyles.buyerHeader : commonStyles.sellerHeader)
+    : {};
   const userNameStyle = type === 'buyer' ? commonStyles.buyerUserName : commonStyles.sellerUserName;
   const greetingStyle = type === 'buyer' ? commonStyles.buyerGreeting : commonStyles.sellerGreeting;
   const avatarStyle = type === 'buyer' ? commonStyles.buyerAvatar : commonStyles.sellerAvatar;

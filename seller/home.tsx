@@ -108,30 +108,9 @@ export default function SellerHomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 32,
-    marginBottom: 16,
-  },
-  userName: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  greeting: {
-    color: '#6B7280',
-    marginTop: 4,
-  },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    borderWidth: 2,
-    borderColor: '#D1FAE5',
-  },
+  // Only keep styles unique to SellerHomeScreen, referencing commonStyles for the rest.
+  // The header-specific styles and container style are now in common.styles.js
+
   content: {
     padding: 20,
   },
