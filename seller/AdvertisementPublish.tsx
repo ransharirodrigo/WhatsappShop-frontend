@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { CommonHeader } from '@/components/CommonHeader';
+import { useAppMode } from '@/contexts/app-mode-context';
 
 interface ProductImage {
   id: string;
@@ -21,6 +22,9 @@ interface ProductImage {
 }
 
 export default function AdvertisementPublish() {
+  // ✅ App Mode (used but not applied yet)
+  const { mode, toggleMode } = useAppMode();
+
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
@@ -46,7 +50,10 @@ export default function AdvertisementPublish() {
       if (!mainImage)
         setMainImage(result.assets[0].uri);
       else if (thumbnails.length < 4)
-        setThumbnails([...thumbnails, { uri: result.assets[0].uri, id: Date.now().toString() }]);
+        setThumbnails([
+          ...thumbnails,
+          { uri: result.assets[0].uri, id: Date.now().toString() }
+        ]);
     }
   };
 
@@ -57,7 +64,6 @@ export default function AdvertisementPublish() {
   return (
     <View style={styles.screenContainer}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Common Header */}
         <CommonHeader
           type="seller"
           userName="Randika Perera"
@@ -66,7 +72,7 @@ export default function AdvertisementPublish() {
           profileRoute="/SellerProfile"
         />
 
-        {/* Main Image + Thumbnails */}
+        {/* Image Section */}
         <View style={styles.imageSection}>
           <TouchableOpacity style={styles.mainImageWrap} onPress={handleImageSelect}>
             {mainImage ? (
@@ -106,7 +112,7 @@ export default function AdvertisementPublish() {
           </View>
         </View>
 
-        {/* Form Inputs */}
+        {/* Form */}
         <View style={styles.form}>
           <Text style={styles.label}>Product/Service Name</Text>
           <TextInput
@@ -175,11 +181,9 @@ export default function AdvertisementPublish() {
             <TouchableOpacity style={styles.socialBtn}>
               <Text style={styles.socialText}>WhatsApp</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.socialBtn}>
               <Text style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.socialBtn}>
               <Text style={styles.socialText}>Instagram</Text>
             </TouchableOpacity>
@@ -187,7 +191,6 @@ export default function AdvertisementPublish() {
 
           <View style={styles.publishRow}>
             <Text style={styles.saveDraftText}>Save to Draft</Text>
-
             <TouchableOpacity style={styles.publishMainBtn}>
               <Text style={styles.publishMainText}>Publish</Text>
             </TouchableOpacity>

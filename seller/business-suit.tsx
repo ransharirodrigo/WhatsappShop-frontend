@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
 import { router } from 'expo-router';
+import { useAppMode } from '@/contexts/app-mode-context';
 
 interface Product {
   id: string;
@@ -21,6 +23,9 @@ interface Product {
 }
 
 export default function BusinessSuitScreen() {
+  // ✅ App mode hooked (not used for styling)
+  const { mode, toggleMode } = useAppMode();
+
   const [sortBy, setSortBy] = useState('Latest');
   const [viewType, setViewType] = useState<'list' | 'grid'>('list');
   const [products, setProducts] = useState<Product[]>([
@@ -46,7 +51,7 @@ export default function BusinessSuitScreen() {
           type="seller"
           userName="Randika Perera"
           greeting="Good Morning!"
-          profileRoute="/buyer-profile"
+          profileRoute="/SellerProfile"
         />
 
         {/* PAGE CONTENT */}
@@ -58,14 +63,17 @@ export default function BusinessSuitScreen() {
                 <Ionicons name="logo-apple" size={60} color="#000" />
               </View>
             </View>
+
             <View style={styles.businessInfo}>
               <Text style={styles.businessName}>AppleAsia</Text>
               <Text style={styles.businessDescription}>
                 Apple Asia is the Popular Seller in Sri Lanka and we strive to bring the Apple products you love
               </Text>
+
               <TouchableOpacity>
                 <Text style={styles.readMore}>read more</Text>
               </TouchableOpacity>
+
               <View style={styles.categoryContainer}>
                 <Text style={styles.categoryLabel}>Category</Text>
                 <View style={styles.categoryBadge}>
@@ -82,32 +90,44 @@ export default function BusinessSuitScreen() {
                 <Text style={styles.statLabel}>Active Products</Text>
                 <Text style={styles.statValue}>20</Text>
               </View>
+
               <View style={styles.divider} />
-              <View style={styles.statItem}>
+
+              {/* Drafts */}
+              <TouchableOpacity
+                style={styles.statItem}
+                onPress={() => {
+                  router.push('/SellerDrafts');
+                }}
+              >
                 <Text style={styles.statLabel}>draft</Text>
                 <Text style={styles.statValue}>03</Text>
-              </View>
+              </TouchableOpacity>
             </View>
+
             <TouchableOpacity
               style={styles.shopSettings}
               onPress={() => {
                 router.push('/SellerStoreUpdate');
               }}
             >
-              <Text style={styles.shopSettingsText}>Shop{'\n'}Settings</Text>
+              <Text style={styles.shopSettingsText}>
+                Shop{'\n'}Settings
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Your Products Section */}
+          {/* Products Header */}
           <View style={styles.productsHeader}>
             <Text style={styles.productsTitle}>Your products</Text>
+
             <View style={styles.sortContainer}>
               <Text style={styles.sortLabel}>sort by</Text>
+
               <TouchableOpacity style={styles.sortDropdown}>
                 <Text style={styles.sortValue}>Latest ▾</Text>
               </TouchableOpacity>
 
-              {/* Single Toggle Button */}
               <TouchableOpacity onPress={toggleView}>
                 <Image
                   source={
@@ -129,8 +149,10 @@ export default function BusinessSuitScreen() {
                   <View style={styles.productImage}>
                     <View style={styles.imagePlaceholder} />
                   </View>
+
                   <View style={styles.productDetails}>
                     <Text style={styles.productName}>{product.name}</Text>
+
                     <View style={styles.productMeta}>
                       <Text style={styles.productPrice}>{product.price}</Text>
                       <Text
@@ -143,6 +165,7 @@ export default function BusinessSuitScreen() {
                       </Text>
                     </View>
                   </View>
+
                   <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => deleteProduct(product.id)}
@@ -158,8 +181,10 @@ export default function BusinessSuitScreen() {
                     <View style={styles.productImage}>
                       <View style={styles.imagePlaceholder} />
                     </View>
+
                     <Text style={styles.productName}>{product.name}</Text>
                     <Text style={styles.productPrice}>{product.price}</Text>
+
                     <Text
                       style={[
                         styles.productStatus,
@@ -168,8 +193,12 @@ export default function BusinessSuitScreen() {
                     >
                       {product.status}
                     </Text>
+
                     <TouchableOpacity
-                      style={[styles.deleteButton, { marginTop: 8, paddingHorizontal: 16, paddingVertical: 6 }]}
+                      style={[
+                        styles.deleteButton,
+                        { marginTop: 8, paddingHorizontal: 16, paddingVertical: 6 },
+                      ]}
                       onPress={() => deleteProduct(product.id)}
                     >
                       <Text style={styles.deleteButtonText}>Delete</Text>
@@ -190,14 +219,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+
   profileCard: {
     flexDirection: 'row',
     backgroundColor: '#FFF',
     borderRadius: 16,
     padding: 16,
-    marginBottom: 20
+    marginBottom: 20,
   },
+
   logoContainer: { marginRight: 16 },
+
   logo: {
     width: 100,
     height: 100,
@@ -206,47 +238,55 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#E5E5EA',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
+
   businessInfo: { flex: 1 },
+
   businessName: {
     fontSize: 20,
     fontWeight: '600',
     color: '#000',
-    marginBottom: 8
+    marginBottom: 8,
   },
+
   businessDescription: {
     fontSize: 13,
     color: '#8E8E93',
     lineHeight: 18,
-    marginBottom: 4
+    marginBottom: 4,
   },
+
   readMore: {
     fontSize: 13,
     color: '#10B981',
     fontWeight: '500',
-    marginBottom: 12
+    marginBottom: 12,
   },
+
   categoryContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
+
   categoryLabel: {
     fontSize: 14,
     color: '#000',
     fontWeight: '500',
-    marginRight: 8
+    marginRight: 8,
   },
+
   categoryBadge: {
     backgroundColor: '#10B981',
     paddingHorizontal: 16,
     paddingVertical: 6,
-    borderRadius: 8
+    borderRadius: 8,
   },
+
   categoryText: {
     fontSize: 13,
     color: '#FFF',
-    fontWeight: '600'
+    fontWeight: '600',
   },
 
   statsContainer: {
@@ -255,133 +295,159 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    alignItems: 'center'
+    alignItems: 'center',
   },
+
   statsRow: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
+
   statItem: { flex: 1 },
+
   statLabel: {
     fontSize: 14,
     color: '#8E8E93',
-    marginBottom: 4
+    marginBottom: 4,
   },
+
   statValue: {
     fontSize: 32,
     fontWeight: '600',
-    color: '#000'
+    color: '#000',
   },
+
   divider: {
     width: 1,
     height: 40,
     backgroundColor: '#E5E5EA',
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
+
   shopSettings: {
     paddingHorizontal: 16,
-    paddingVertical: 8
+    paddingVertical: 8,
   },
+
   shopSettingsText: {
     fontSize: 14,
     color: '#10B981',
     fontWeight: '500',
     textAlign: 'center',
-    lineHeight: 18
+    lineHeight: 18,
   },
 
   productsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
   },
+
   productsTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000'
+    color: '#000',
   },
+
   sortContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8
+    gap: 8,
   },
+
   sortLabel: {
     fontSize: 14,
-    color: '#8E8E93'
+    color: '#8E8E93',
   },
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4
-  },
+
   sortValue: {
     fontSize: 11,
     color: '#494949',
   },
+
+  sortDropdown: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+
   viewIcon: {
     width: 24,
     height: 24,
-    marginLeft: 8
+    marginLeft: 8,
   },
 
   productsList: { gap: 12 },
+
   productItem: {
     flexDirection: 'row',
     backgroundColor: '#FFF',
     borderRadius: 12,
     padding: 12,
     alignItems: 'center',
-    marginBottom: 12
+    marginBottom: 12,
   },
+
   productImage: {
     width: 60,
     height: 60,
     borderRadius: 10,
     backgroundColor: '#F5F5F5',
     marginRight: 12,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
+
   imagePlaceholder: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#E5E5EA'
+    backgroundColor: '#E5E5EA',
   },
+
   productDetails: { flex: 1 },
+
   productName: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-    marginBottom: 4
+    marginBottom: 4,
   },
+
   productMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12
+    gap: 12,
   },
+
   productPrice: {
     fontSize: 14,
-    color: '#8E8E93'
+    color: '#8E8E93',
   },
+
   productStatus: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#10B981'
+    color: '#10B981',
   },
+
   productStatusDeactive: {
-    color: '#EF4444'
+    color: '#EF4444',
   },
+
   deleteButton: {
     backgroundColor: '#EF4444',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 8
+    borderRadius: 8,
   },
+
   deleteButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFF'
+    color: '#FFF',
   },
 
   gridContainer: {
@@ -389,21 +455,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: 12,
-    paddingHorizontal: 0
   },
+
   gridItem: {
     width: '48%',
     backgroundColor: '#FFF',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
-    alignItems: 'center'
-  },
-  sortDropdown: {
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    alignItems: 'center',
   },
 });
