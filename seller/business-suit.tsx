@@ -11,7 +11,6 @@ import {
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
 import { router } from 'expo-router';
-import { useAppMode } from '@/contexts/app-mode-context';
 
 interface Product {
   id: string;
