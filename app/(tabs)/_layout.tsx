@@ -41,20 +41,6 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="fav-items"
-          options={{
-            title: 'Fav Items',
-            tabBarIcon: ({ color }) => <FontAwesome5 name="heart" size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="add"
-          options={{
-            title: 'Add',
-            tabBarIcon: ({ color }) => <FontAwesome5 name="plus-circle" size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
           name="my-orders"
           options={{
             title: 'My Orders',
@@ -74,11 +60,22 @@ export default function TabLayout() {
             },
           }}
         />
+
+        {/* HIDDEN SCREENS OF BUYER */}
         <Tabs.Screen name="explore" options={{ href: null }} />
         <Tabs.Screen name="add-products" options={{ href: null }} />
         <Tabs.Screen name="business-suit" options={{ href: null }} />
-        <Tabs.Screen name="manage-chats" options={{ href: null }} />
         <Tabs.Screen name="buyer-switch" options={{ href: null }} />
+        <Tabs.Screen name="HelpDesk" options={{ href: null }} />
+        <Tabs.Screen name="fav-items" options={{ href: null }} />
+
+        {/* HIDDEN SCREENS OF SELLER */}
+        <Tabs.Screen name="SellerAdvertisementPublish" options={{ href: null }} />
+        <Tabs.Screen name="SellerDrafts" options={{ href: null }} />
+        <Tabs.Screen name="SellerHelpDesk" options={{ href: null }} />
+        <Tabs.Screen name="SellerStoreUpdate" options={{ href: null }} />
+        <Tabs.Screen name="manage-chats" options={{ href: null }} />
+
       </Tabs>
     );
   }
@@ -116,7 +113,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="add-products"
+        name="SellerAdvertisementPublish"
         options={{
           title: 'Add Products',
           tabBarIcon: ({ color }) => <FontAwesome5 name="plus-square" size={24} color={color} />,
@@ -136,24 +133,21 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome5 name="comments" size={24} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="buyer-switch"
-        options={{
-          title: 'Buyer',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="retweet" size={24} color={color} />,
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            toggleMode();
-          },
-        }}
-      />
+
+      {/* HIDDEN SCREENS OF SELLER */}
+      <Tabs.Screen name="buyer-switch" options={{ href: null }} />
       <Tabs.Screen name="explore" options={{ href: null }} />
       <Tabs.Screen name="fav-items" options={{ href: null }} />
       <Tabs.Screen name="add" options={{ href: null }} />
       <Tabs.Screen name="my-orders" options={{ href: null }} />
+      <Tabs.Screen name="SellerDrafts" options={{ href: null }} />
+      <Tabs.Screen name="SellerStoreUpdate" options={{ href: null }} />
+      <Tabs.Screen name="SellerHelpDesk" options={{ href: null }} />
+
+      {/* HIDDEN SCREENS OF BUYER */}
+      <Tabs.Screen name="HelpDesk" options={{ href: null }} />
       <Tabs.Screen name="seller-switch" options={{ href: null }} />
+
     </Tabs>
   );
 }

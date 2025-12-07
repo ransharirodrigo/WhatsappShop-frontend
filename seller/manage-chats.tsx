@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
+import { useAppMode } from '@/contexts/app-mode-context';
 
 interface Chat {
   id: string;
@@ -21,6 +20,9 @@ interface Chat {
 }
 
 export default function ManageChatsScreen() {
+  // ✅ useAppMode added (no theme usage)
+  const { mode, toggleMode } = useAppMode();
+
   const [activeTab, setActiveTab] = useState<'new' | 'unread'>('new');
 
   const chats: Chat[] = [
@@ -40,7 +42,6 @@ export default function ManageChatsScreen() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-
         <CommonHeader
           type="seller"
           userName="Randika Perera"
@@ -99,11 +100,13 @@ export default function ManageChatsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: '#F5F5F5'
+    flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   scrollView: {
-    flex: 1
+    flex: 1,
   },
+
   tabsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 20,
@@ -129,7 +132,9 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 
-  chatList: { paddingHorizontal: 20 },
+  chatList: {
+    paddingHorizontal: 20,
+  },
 
   chatItem: {
     flexDirection: 'row',
@@ -154,7 +159,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
 
-  chatContent: { flex: 1 },
+  chatContent: {
+    flex: 1,
+  },
   chatName: {
     fontSize: 16,
     fontWeight: '600',
@@ -180,5 +187,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 
-  bottomSpacing: { height: 40 },
+  bottomSpacing: {
+    height: 40,
+  },
 });

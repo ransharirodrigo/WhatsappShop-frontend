@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useAppMode } from '@/contexts/app-mode-context';
 
 interface ProductImage {
   id: string;
@@ -16,7 +17,13 @@ interface ProductImage {
 }
 
 export default function DraftPublishView() {
-  const [mainImage, setMainImage] = useState<string>('https://via.placeholder.com/400x400'); // placeholder main image
+  const { mode, toggleMode } = useAppMode();
+
+
+  const [mainImage, setMainImage] = useState<string>(
+    'https://via.placeholder.com/400x400'
+  );
+
   const [thumbnails, setThumbnails] = useState<ProductImage[]>([
     { id: '1', uri: 'https://via.placeholder.com/70' },
     { id: '2', uri: 'https://via.placeholder.com/70' },
@@ -30,20 +37,40 @@ export default function DraftPublishView() {
     'The iPhone 16 Pro features a 6.3-inch Super Retina XDR display, powered by the A18 Pro chip, and offers advanced camera capabilities, including a triple-camera system.';
   const unitCount = 10;
 
-  // calculate extra images
   const extraCount = thumbnails.length > 3 ? thumbnails.length - 3 : 0;
 
   return (
-    <View style={styles.screenContainer}>
+    <View
+      style={[
+        styles.screenContainer
+      ]}
+    >
+      {/* Mode Toggle (optional – useful for testing) */}
+      <TouchableOpacity
+        onPress={toggleMode}
+        style={styles.modeToggle}
+      >
+        <FontAwesome5
+      
+          size={18}
+
+        />
+      </TouchableOpacity>
+
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Main Product Image */}
+        {/* Main Image */}
         <Image source={{ uri: mainImage }} style={styles.mainImage} />
 
         {/* Thumbnails */}
         <View style={styles.thumbnailRow}>
-          {thumbnails.slice(0, 3).map((thumb, index) => (
-            <Image key={index} source={{ uri: thumb.uri }} style={styles.thumbnail} />
+          {thumbnails.slice(0, 3).map((thumb) => (
+            <Image
+              key={thumb.id}
+              source={{ uri: thumb.uri }}
+              style={styles.thumbnail}
+            />
           ))}
+
           {extraCount > 0 && (
             <View style={[styles.thumbnail, styles.extraThumbnail]}>
               <Text style={styles.extraText}>+{extraCount} more</Text>
@@ -51,38 +78,44 @@ export default function DraftPublishView() {
           )}
         </View>
 
-        {/* Product Info */}
+        {/* Info Section */}
         <View style={styles.infoSection}>
-          <Text style={styles.productName}>{productName}</Text>
+          <Text
+            style={[
+              styles.productName,
+            ]}
+          >
+            {productName}
+          </Text>
+
           <Text style={styles.price}>LKR {price}</Text>
-          <Text style={styles.unit}>unit {unitCount}</Text>
-          <Text style={styles.description}>{description}</Text>
+
+          <Text
+            style={[
+              styles.unit,
+            ]}
+          >
+            unit {unitCount}
+          </Text>
+
+          <Text
+            style={[
+              styles.description,
+            ]}
+          >
+            {description}
+          </Text>
         </View>
 
         {/* Publish Button */}
-        <TouchableOpacity style={styles.publishBtn}>
+        <TouchableOpacity
+          style={[
+            styles.publishBtn,
+          ]}
+        >
           <Text style={styles.publishText}>Publish now</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navBtn}>
-          <FontAwesome5 name="home" size={20} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navBtn}>
-          <FontAwesome5 name="shopping-bag" size={20} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navBtn}>
-          <FontAwesome5 name="plus-circle" size={28} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navBtn}>
-          <FontAwesome5 name="store" size={20} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navBtn}>
-          <FontAwesome5 name="comments" size={20} color="#fff" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -90,8 +123,13 @@ export default function DraftPublishView() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingTop: Platform.OS === 'ios' ? 20 : 0,
+  },
+  modeToggle: {
+    position: 'absolute',
+    top: 45,
+    right: 20,
+    zIndex: 10,
   },
   mainImage: {
     width: '100%',
@@ -114,7 +152,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   extraText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   infoSection: {
@@ -133,40 +171,23 @@ const styles = StyleSheet.create({
   },
   unit: {
     fontSize: 14,
-    color: '#666',
     marginTop: 2,
     marginBottom: 10,
   },
   description: {
     fontSize: 14,
-    color: '#4c4c4c',
     marginBottom: 20,
+    lineHeight: 20,
   },
   publishBtn: {
-    backgroundColor: '#34C488',
     marginHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 12,
     alignItems: 'center',
   },
   publishText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
-  },
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 70,
-    backgroundColor: '#34C488',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  navBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
