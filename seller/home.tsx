@@ -1,7 +1,8 @@
 // SellerHomeScreen.js
 
+import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
 import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function SellerHomeScreen() {
   // ... (Keep existing data definitions)
@@ -27,13 +28,16 @@ export default function SellerHomeScreen() {
 
   return (
     <ScrollView style={commonStyles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.headerRow}>
-        <View>
-          <Text style={styles.userName}>Randika Perera</Text>
-          <Text style={styles.greeting}>Good Morning!</Text>
-        </View>
-        <Image source={require('@/assets/images/dp.jpg')} style={styles.avatar} />
-      </View>
+      {/* 1. Replace the old header View with the CommonHeader component.
+        2. Seller's header is non-collapsible, so it's placed directly in the ScrollView.
+      */}
+      <CommonHeader
+        type="seller"
+        userName="Randika Perera"
+        greeting="Good Morning!"
+        // Add a placeholder route or leave empty if the seller profile route is not defined yet
+        profileRoute="/seller-profile" 
+      />
 
       <View style={styles.content}>
         {/* ... (Rest of the screen content) ... */}
@@ -108,9 +112,47 @@ export default function SellerHomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  // Only keep styles unique to SellerHomeScreen, referencing commonStyles for the rest.
-  // The header-specific styles and container style are now in common.styles.js
 
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    backgroundColor: '#fff',
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  greeting: {
+    fontSize: 16,
+    color: '#999',
+    marginTop: 4,
+  },
+  avatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#1C6055',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  avatarText: {
+    fontSize: 30,
+  },
   content: {
     padding: 20,
   },
