@@ -8,8 +8,6 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { useAppMode } from '@/contexts/app-mode-context';
 
 interface ProductImage {
   id: string;
@@ -17,9 +15,6 @@ interface ProductImage {
 }
 
 export default function DraftPublishView() {
-  const { mode, toggleMode } = useAppMode();
-
-
   const [mainImage, setMainImage] = useState<string>(
     'https://via.placeholder.com/400x400'
   );
@@ -40,23 +35,7 @@ export default function DraftPublishView() {
   const extraCount = thumbnails.length > 3 ? thumbnails.length - 3 : 0;
 
   return (
-    <View
-      style={[
-        styles.screenContainer
-      ]}
-    >
-      {/* Mode Toggle (optional – useful for testing) */}
-      <TouchableOpacity
-        onPress={toggleMode}
-        style={styles.modeToggle}
-      >
-        <FontAwesome5
-      
-          size={18}
-
-        />
-      </TouchableOpacity>
-
+    <View style={styles.screenContainer}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Main Image */}
         <Image source={{ uri: mainImage }} style={styles.mainImage} />
@@ -80,39 +59,14 @@ export default function DraftPublishView() {
 
         {/* Info Section */}
         <View style={styles.infoSection}>
-          <Text
-            style={[
-              styles.productName,
-            ]}
-          >
-            {productName}
-          </Text>
-
+          <Text style={styles.productName}>{productName}</Text>
           <Text style={styles.price}>LKR {price}</Text>
-
-          <Text
-            style={[
-              styles.unit,
-            ]}
-          >
-            unit {unitCount}
-          </Text>
-
-          <Text
-            style={[
-              styles.description,
-            ]}
-          >
-            {description}
-          </Text>
+          <Text style={styles.unit}>unit {unitCount}</Text>
+          <Text style={styles.description}>{description}</Text>
         </View>
 
         {/* Publish Button */}
-        <TouchableOpacity
-          style={[
-            styles.publishBtn,
-          ]}
-        >
+        <TouchableOpacity style={styles.publishBtn}>
           <Text style={styles.publishText}>Publish now</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -123,13 +77,8 @@ export default function DraftPublishView() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-  modeToggle: {
-    position: 'absolute',
-    top: 45,
-    right: 20,
-    zIndex: 10,
+    backgroundColor: '#FFFFFF',
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
   },
   mainImage: {
     width: '100%',
@@ -162,6 +111,7 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 20,
     fontWeight: '700',
+    marginBottom: 4,
   },
   price: {
     fontSize: 22,
@@ -173,17 +123,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 2,
     marginBottom: 10,
+    color: '#333',
   },
   description: {
     fontSize: 14,
-    marginBottom: 20,
     lineHeight: 20,
+    color: '#555',
   },
   publishBtn: {
     marginHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 12,
+    backgroundColor: '#34C488',
     alignItems: 'center',
+    marginTop: 20,
   },
   publishText: {
     color: '#FFFFFF',
