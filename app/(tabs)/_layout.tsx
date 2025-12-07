@@ -143,6 +143,8 @@ export default function TabLayout() {
       <Tabs.Screen name="SellerDrafts" options={{ href: null }} />
       <Tabs.Screen name="SellerStoreUpdate" options={{ href: null }} />
       <Tabs.Screen name="SellerHelpDesk" options={{ href: null }} />
+      <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
+      <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
 
       {/* HIDDEN SCREENS OF BUYER */}
       <Tabs.Screen name="HelpDesk" options={{ href: null }} />

@@ -30,6 +30,11 @@ export default function SellerDrafts() {
     { id: 4, name: 'Mac mini M series', price: '450,000', image: '🖥️' },
   ];
 
+  // Navigate to single draft view
+  const openDraft = (id: number) => {
+    router.push(`/SellerPublishDraft/${id}`);
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: '#F7F7F7' }}>
       <ScrollView
@@ -73,7 +78,11 @@ export default function SellerDrafts() {
           {viewType === 'list' ? (
             <View style={styles.productsContainer}>
               {draftProducts.map(product => (
-                <TouchableOpacity key={product.id} style={styles.productCard}>
+                <TouchableOpacity
+                  key={product.id}
+                  style={styles.productCard}
+                  onPress={() => openDraft(product.id)}
+                >
                   <View style={styles.productImage}>
                     <Text style={styles.productEmoji}>{product.image}</Text>
                   </View>
@@ -88,7 +97,11 @@ export default function SellerDrafts() {
           ) : (
             <View style={styles.gridContainer}>
               {draftProducts.map(product => (
-                <TouchableOpacity key={product.id} style={styles.gridItem}>
+                <TouchableOpacity
+                  key={product.id}
+                  style={styles.gridItem}
+                  onPress={() => openDraft(product.id)}
+                >
                   <View style={styles.productImage}>
                     <Text style={styles.productEmoji}>{product.image}</Text>
                   </View>
