@@ -75,6 +75,8 @@ export default function TabLayout() {
         <Tabs.Screen name="SellerHelpDesk" options={{ href: null }} />
         <Tabs.Screen name="SellerStoreUpdate" options={{ href: null }} />
         <Tabs.Screen name="manage-chats" options={{ href: null }} />
+        <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
+        <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
 
       </Tabs>
     );
