@@ -1,7 +1,6 @@
 import { commonStyles } from '@/assets/css/common_styles';
 import { CommonHeader } from '@/components/CommonHeader';
 import { useAppMode } from '@/contexts/app-mode-context';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -159,47 +158,7 @@ export default function FavItemsScreen() {
         </View>
       </ScrollView>
 
-      <View style={styles.bottomNavContainer}>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/')}
-        >
-          <FontAwesome5 name="home" size={24} color="#34C488" />
-          <Text style={styles.navLabelActive}>Home</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/fav-items')}
-        >
-          <FontAwesome5 name="heart" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Fav Items</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/add')}
-        >
-          <FontAwesome5 name="plus-circle" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Add</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/my-orders')}
-        >
-          <FontAwesome5 name="box" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>My Orders</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={toggleMode}
-        >
-          <FontAwesome5 name="retweet" size={24} color="#7A9B94" />
-          <Text style={styles.navLabelInactive}>Seller</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -319,37 +278,5 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
   },
-  bottomNavContainer: {
-    height: 80,
-    backgroundColor: '#1C6055',
-    borderTopWidth: 0,
-    borderRadius: 30,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingBottom: 10,
-    paddingTop: 10,
-  },
-  navItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navLabelActive: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#34C488',
-  },
-  navLabelInactive: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#7A9B94',
-  },
+
 });
