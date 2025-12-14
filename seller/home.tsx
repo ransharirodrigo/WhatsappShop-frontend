@@ -1,10 +1,13 @@
 // SellerHomeScreen.js
 
-import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
 import { commonStyles } from '@/assets/css/common_styles'; // <-- Import Common Styles
+import { CommonHeader } from '@/components/CommonHeader'; // <-- Import Common Header
+import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function SellerHomeScreen() {
+  const router = useRouter();
+  
   // ... (Keep existing data definitions)
   const stats = [
     { id: 1, icon: '🛒', label: 'Active\nProducts', value: '24', color: '#34C488' },
@@ -81,7 +84,7 @@ export default function SellerHomeScreen() {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Your Products</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/view-all-products')}>
             <Text style={styles.viewAllText}>View All Products</Text>
           </TouchableOpacity>
         </View>

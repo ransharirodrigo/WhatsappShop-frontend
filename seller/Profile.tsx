@@ -1,8 +1,8 @@
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { useState } from 'react';
 
 export const options = {
   headerShown: false,
@@ -35,7 +35,7 @@ export default function SellerProfileScreen() {
           <View style={styles.profileContent}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarRingContainer}>
-                <Svg width={120} height={120} style={styles.avatarRing}>
+                <Svg width={120} height={120}>
                   <Circle
                     cx="60"
                     cy="60"
