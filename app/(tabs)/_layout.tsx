@@ -102,7 +102,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="explore"
+          name="Category"
           options={{
             title: 'Category',
             tabBarIcon: ({ color }) => <CategoryIcon color={color} />,
@@ -137,10 +137,12 @@ export default function TabLayout() {
         />
 
         {/* HIDDEN SCREENS OF BUYER */}
-        <Tabs.Screen name="add-products" options={{ href: null }} />
+        {/* <Tabs.Screen name="add-products" options={{ href: null }} /> */}
         <Tabs.Screen name="business-suit" options={{ href: null }} />
         <Tabs.Screen name="buyer-switch" options={{ href: null }} />
         <Tabs.Screen name="HelpDesk" options={{ href: null }} />
+        <Tabs.Screen name="view-all-products" options={{ href: null }} />
+        <Tabs.Screen name="explore" options={{ href: null }} />
 
         {/* HIDDEN SCREENS OF SELLER */}
         <Tabs.Screen name="SellerAdvertisementPublish" options={{ href: null }} />
@@ -220,6 +222,7 @@ export default function TabLayout() {
       {/* HIDDEN SCREENS OF BUYER */}
       <Tabs.Screen name="HelpDesk" options={{ href: null }} />
       <Tabs.Screen name="seller-switch" options={{ href: null }} />
+      <Tabs.Screen name="Category" options={{ href: null }} />
 
     </Tabs>
   );
