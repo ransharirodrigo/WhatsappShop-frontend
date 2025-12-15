@@ -109,7 +109,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="fav-items"
+          name="Cart"
           options={{
             title: 'Cart',
             tabBarIcon: ({ color }) => <CartIcon color={color} />,
@@ -143,6 +143,7 @@ export default function TabLayout() {
         <Tabs.Screen name="HelpDesk" options={{ href: null }} />
         <Tabs.Screen name="view-all-products" options={{ href: null }} />
         <Tabs.Screen name="explore" options={{ href: null }} />
+        <Tabs.Screen name="fav-items" options={{ href: null }} />
 
         {/* HIDDEN SCREENS OF SELLER */}
         <Tabs.Screen name="SellerAdvertisementPublish" options={{ href: null }} />
@@ -223,6 +224,7 @@ export default function TabLayout() {
       <Tabs.Screen name="HelpDesk" options={{ href: null }} />
       <Tabs.Screen name="seller-switch" options={{ href: null }} />
       <Tabs.Screen name="Category" options={{ href: null }} />
+      <Tabs.Screen name="Cart" options={{ href: null }} />
 
     </Tabs>
   );
