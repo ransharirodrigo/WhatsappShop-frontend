@@ -153,6 +153,7 @@ export default function TabLayout() {
         <Tabs.Screen name="manage-chats" options={{ href: null }} />
         <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
         <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
+        <Tabs.Screen name="BuyAdvertisementPlan" options={{ href: null }} />
 
       </Tabs>
     );
@@ -219,6 +220,7 @@ export default function TabLayout() {
       <Tabs.Screen name="SellerHelpDesk" options={{ href: null }} />
       <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
       <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
+      <Tabs.Screen name="BuyAdvertisementPlan" options={{ href: null }} />
 
       {/* HIDDEN SCREENS OF BUYER */}
       <Tabs.Screen name="HelpDesk" options={{ href: null }} />
