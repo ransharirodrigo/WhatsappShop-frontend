@@ -7,7 +7,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 
 export default function SellerHomeScreen() {
   const router = useRouter();
-  
+
   // ... (Keep existing data definitions)
   const stats = [
     { id: 1, icon: '🛒', label: 'Active\nProducts', value: '24', color: '#34C488' },
@@ -39,7 +39,7 @@ export default function SellerHomeScreen() {
         userName="Randika Perera"
         greeting="Good Morning!"
         // Add a placeholder route or leave empty if the seller profile route is not defined yet
-        profileRoute="/seller-profile" 
+        profileRoute="/seller-profile"
       />
 
       <View style={styles.content}>
@@ -84,10 +84,14 @@ export default function SellerHomeScreen() {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Your Products</Text>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/view-all-products')}>
+
+          <TouchableOpacity
+            onPress={() => router.push('/(tabs)/AllProducts')}
+          >
             <Text style={styles.viewAllText}>View All Products</Text>
           </TouchableOpacity>
         </View>
+
 
         <View style={styles.tableContainer}>
           <View style={styles.tableHeader}>

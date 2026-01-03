@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import {
   FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -49,25 +50,15 @@ export default function AllProducts() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  const renderItem = ({ item }: any) => {
-    if (viewMode === 'grid') {
-      return (
-        <View style={styles.gridCard}>
-          <Image source={item.image} style={styles.gridImage} />
-          <Text style={styles.itemName}>{item.name}</Text>
+  const renderItem = ({ item }: any) => (
+    <View style={styles.productItem}>
+      <Image source={item.image} style={styles.productImage} />
+
+      <View style={styles.productDetails}>
+        <Text style={styles.itemName}>{item.name}</Text>
+
+        <View style={styles.metaRow}>
           <Text style={styles.itemPrice}>{item.price}</Text>
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.productItem}>
-        <Image source={item.image} style={styles.productImage} />
-
-        <View style={styles.productDetails}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemPrice}>{item.price}</Text>
-
           <Text
             style={[
               styles.status,
@@ -79,114 +70,94 @@ export default function AllProducts() {
             {item.status}
           </Text>
         </View>
-
-        <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionBtnBlue}>
-            <Feather name="edit" size={14} color="#fff" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionBtnRed}>
-            <Feather name="trash-2" size={14} color="#fff" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionBtnGreen}>
-            <Feather name="eye" size={14} color="#fff" />
-          </TouchableOpacity>
-        </View>
       </View>
-    );
-  };
+
+      <View style={styles.actionRow}>
+        <TouchableOpacity style={styles.actionBtnBlue}>
+          <Feather name="edit" size={13} color="#fff" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionBtnRed}>
+          <Feather name="trash-2" size={13} color="#fff" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionBtnGreen}>
+          <Feather name="eye" size={13} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   return (
     <View style={commonStyles.container}>
-      {/* HEADER */}
-      <CommonHeader
-        type="seller"
-        userName="WhatsAppShop"
-        greeting="Good Morning!"
-        profileRoute="/seller-profile"
-      />
+      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+        {/* COMMON HEADER — UNCHANGED */}
+        <CommonHeader
+          type="seller"
+          userName="WhatsAppShop"
+          greeting="Good Morning!"
+          profileRoute="/seller-profile"
+        />
 
-      {/* TITLE + SORT + VIEW */}
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>All Products</Text>
+        {/* PAGE CONTENT */}
+        <View style={styles.pageContent}>
+          {/* TITLE + SORT */}
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>All Products</Text>
 
-        <View style={styles.sortRow}>
-          <Text style={styles.sortText}>sort by</Text>
+            <View style={styles.sortRow}>
+              <Text style={styles.sortText}>sort by</Text>
 
-          <TouchableOpacity style={styles.sortDropdown}>
-            <Text style={styles.sortValue}>Latest ▾</Text>
-          </TouchableOpacity>
+              <TouchableOpacity style={styles.sortDropdown}>
+                <Text style={styles.sortValue}>Latest ▾</Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.viewToggle}
-            onPress={() =>
-              setViewMode(viewMode === 'list' ? 'grid' : 'list')
-            }
-          >
-            <Image
-              source={
-                viewMode === 'list'
-                  ? require('../assets/images/cart_images/Grid.png')
-                  : require('../assets/images/cart_images/List.png')
-              }
-              style={styles.toggleIcon}
-            />
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.viewToggle}
+                onPress={() =>
+                  setViewMode(viewMode === 'list' ? 'grid' : 'list')
+                }
+              >
+                <Image
+                  source={
+                    viewMode === 'list'
+                      ? require('../assets/images/cart_images/Grid.png')
+                      : require('../assets/images/cart_images/List.png')
+                  }
+                  style={styles.toggleIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* PRODUCT LIST */}
+          <FlatList
+            data={PRODUCTS}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            scrollEnabled={false}
+          />
         </View>
-      </View>
+      </ScrollView>
 
-      {/* PRODUCT LIST */}
-      <FlatList
-        data={PRODUCTS}
-        key={viewMode}
-        numColumns={viewMode === 'grid' ? 2 : 1}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}
-        columnWrapperStyle={
-          viewMode === 'grid'
-            ? { justifyContent: 'space-between' }
-            : undefined
-        }
-        showsVerticalScrollIndicator={false}
-      />
-
-      {/* BOTTOM NAV */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="home" size={22} color="#7A9B94" />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="box" size={22} color="#34C488" />
-          <Text style={styles.navTextActive}>Store</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="plus-circle" size={22} color="#7A9B94" />
-          <Text style={styles.navText}>Add</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <FontAwesome5 name="comments" size={22} color="#7A9B94" />
-          <Text style={styles.navText}>Chats</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
 
 /* -------------------- STYLES -------------------- */
 const styles = StyleSheet.create({
-  headerRow: {
+  pageContent: {
     paddingHorizontal: 20,
-    marginVertical: 10,
+    paddingTop: 10, // ✅ THIS fixes the header spacing issue
+  },
+
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 16,
   },
+
   title: {
     fontSize: 18,
     fontWeight: '700',
@@ -198,10 +169,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
+
   sortText: {
     fontSize: 11,
     color: '#777',
   },
+
   sortDropdown: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
@@ -209,30 +182,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+
   sortValue: {
     fontSize: 11,
     color: '#494949',
   },
+
   viewToggle: {
     padding: 6,
   },
+
   toggleIcon: {
     width: 18,
     height: 18,
   },
 
-  /* LIST ITEM */
   productItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 14,
   },
+
   productImage: {
-    width: 52,
-    height: 52,
-    borderRadius: 8,
+    width: 56,
+    height: 56,
+    borderRadius: 10,
     backgroundColor: '#F0F0F0',
   },
+
   productDetails: {
     flex: 1,
     marginLeft: 14,
@@ -242,22 +219,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#2B2B2B',
+    marginBottom: 4,
   },
+
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
   itemPrice: {
     fontSize: 13,
-    fontWeight: '700',
-    color: '#34C488',
-    marginTop: 2,
+    color: '#9A9A9A',
   },
 
   status: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: 13,
     fontWeight: '600',
   },
+
   active: {
     color: '#34C488',
   },
+
   deactive: {
     color: '#E74C3C',
   },
@@ -266,39 +250,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 6,
   },
+
   actionBtnBlue: {
-    backgroundColor: '#3B82F6',
-    padding: 6,
-    borderRadius: 6,
+    backgroundColor: '#2563EB',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
   actionBtnRed: {
     backgroundColor: '#EF4444',
-    padding: 6,
-    borderRadius: 6,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
   actionBtnGreen: {
-    backgroundColor: '#10B981',
-    padding: 6,
-    borderRadius: 6,
+    backgroundColor: '#065F46',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
-  /* GRID */
-  gridCard: {
-    width: '48%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 12,
-  },
-  gridImage: {
-    width: '100%',
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 8,
-    backgroundColor: '#F0F0F0',
-  },
-
-  /* BOTTOM NAV */
   bottomNav: {
     height: 80,
     backgroundColor: '#1C6055',
@@ -312,14 +291,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
+
   navItem: {
     alignItems: 'center',
   },
+
   navText: {
     fontSize: 11,
     marginTop: 4,
     color: '#7A9B94',
   },
+
   navTextActive: {
     fontSize: 11,
     marginTop: 4,
