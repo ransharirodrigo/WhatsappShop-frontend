@@ -141,7 +141,6 @@ export default function TabLayout() {
         <Tabs.Screen name="business-suit" options={{ href: null }} />
         <Tabs.Screen name="buyer-switch" options={{ href: null }} />
         <Tabs.Screen name="HelpDesk" options={{ href: null }} />
-        <Tabs.Screen name="view-all-products" options={{ href: null }} />
         <Tabs.Screen name="explore" options={{ href: null }} />
         <Tabs.Screen name="fav-items" options={{ href: null }} />
 
@@ -154,6 +153,7 @@ export default function TabLayout() {
         <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
         <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
         <Tabs.Screen name="BuyAdvertisementPlan" options={{ href: null }} />
+        <Tabs.Screen name="AllProducts" options={{ href: null }} />
 
       </Tabs>
     );
@@ -221,7 +221,7 @@ export default function TabLayout() {
       <Tabs.Screen name="SellerPublishDraft/index" options={{ href: null }} />
       <Tabs.Screen name="SellerPublishDraft/[id]" options={{ href: null }} />
       <Tabs.Screen name="BuyAdvertisementPlan" options={{ href: null }} />
-      <Tabs.Screen name="view-all-products" options={{ href: null }} />
+      <Tabs.Screen name="AllProducts" options={{ href: null }} />
 
       {/* HIDDEN SCREENS OF BUYER */}
       <Tabs.Screen name="HelpDesk" options={{ href: null }} />
