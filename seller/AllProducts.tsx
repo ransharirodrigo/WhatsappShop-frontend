@@ -1,6 +1,6 @@
 import { CommonHeader } from '@/components/CommonHeader';
 import { commonStyles } from '@/assets/css/common_styles';
-import { FontAwesome5, Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -50,15 +50,19 @@ export default function AllProducts() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  const renderItem = ({ item }: any) => (
-    <View style={styles.productItem}>
-      <Image source={item.image} style={styles.productImage} />
+  const renderItem = ({ item }: any) => {
+    /* ---------- GRID VIEW ---------- */
+    if (viewMode === 'grid') {
+      return (
+        <View style={styles.gridItem}>
+          <Image source={item.image} style={styles.gridImage} />
 
-      <View style={styles.productDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.gridName} numberOfLines={2}>
+            {item.name}
+          </Text>
 
-        <View style={styles.metaRow}>
-          <Text style={styles.itemPrice}>{item.price}</Text>
+          <Text style={styles.gridPrice}>{item.price}</Text>
+
           <Text
             style={[
               styles.status,
@@ -70,28 +74,53 @@ export default function AllProducts() {
             {item.status}
           </Text>
         </View>
+      );
+    }
+
+    /* ---------- LIST VIEW ---------- */
+    return (
+      <View style={styles.productItem}>
+        <Image source={item.image} style={styles.productImage} />
+
+        <View style={styles.productDetails}>
+          <Text style={styles.itemName}>{item.name}</Text>
+
+          <View style={styles.metaRow}>
+            <Text style={styles.itemPrice}>{item.price}</Text>
+            <Text
+              style={[
+                styles.status,
+                item.status === 'Active'
+                  ? styles.active
+                  : styles.deactive,
+              ]}
+            >
+              {item.status}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.actionBtnBlue}>
+            <Feather name="edit" size={13} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.actionBtnRed}>
+            <Feather name="trash-2" size={13} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.actionBtnGreen}>
+            <Feather name="eye" size={13} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.actionRow}>
-        <TouchableOpacity style={styles.actionBtnBlue}>
-          <Feather name="edit" size={13} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionBtnRed}>
-          <Feather name="trash-2" size={13} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionBtnGreen}>
-          <Feather name="eye" size={13} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={commonStyles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-        {/* COMMON HEADER — UNCHANGED */}
+        {/* COMMON HEADER (same as other screens) */}
         <CommonHeader
           type="seller"
           userName="WhatsAppShop"
@@ -101,7 +130,7 @@ export default function AllProducts() {
 
         {/* PAGE CONTENT */}
         <View style={styles.pageContent}>
-          {/* TITLE + SORT */}
+          {/* TITLE + SORT + TOGGLE */}
           <View style={styles.headerRow}>
             <Text style={styles.title}>All Products</Text>
 
@@ -133,13 +162,19 @@ export default function AllProducts() {
           {/* PRODUCT LIST */}
           <FlatList
             data={PRODUCTS}
+            key={viewMode} // 🔥 required for layout switch
+            numColumns={viewMode === 'grid' ? 2 : 1}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             scrollEnabled={false}
+            columnWrapperStyle={
+              viewMode === 'grid'
+                ? { justifyContent: 'space-between' }
+                : undefined
+            }
           />
         </View>
       </ScrollView>
-
     </View>
   );
 }
@@ -148,7 +183,7 @@ export default function AllProducts() {
 const styles = StyleSheet.create({
   pageContent: {
     paddingHorizontal: 20,
-    paddingTop: 10, // ✅ THIS fixes the header spacing issue
+    paddingTop: 10,
   },
 
   headerRow: {
@@ -196,6 +231,8 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
   },
+
+  /* ---------- LIST VIEW ---------- */
 
   productItem: {
     flexDirection: 'row',
@@ -278,33 +315,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  bottomNav: {
-    height: 80,
-    backgroundColor: '#1C6055',
-    borderRadius: 30,
-    margin: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  /* ---------- GRID VIEW ---------- */
+
+  gridItem: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 14,
   },
 
-  navItem: {
-    alignItems: 'center',
+  gridImage: {
+    width: '100%',
+    height: 110,
+    borderRadius: 10,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 10,
   },
 
-  navText: {
-    fontSize: 11,
-    marginTop: 4,
-    color: '#7A9B94',
+  gridName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#2B2B2B',
+    marginBottom: 4,
   },
 
-  navTextActive: {
-    fontSize: 11,
-    marginTop: 4,
-    color: '#34C488',
+  gridPrice: {
+    fontSize: 12,
+    color: '#9A9A9A',
+    marginBottom: 4,
   },
 });
